@@ -1,9 +1,8 @@
 # Julia wrapper for header: laszip_api.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-# const laszip = Libdl.find_library(["laszip_api"])
-# isempty(laszip) && error("could not find laszip library")
-const laszip = "/Users/epta/git/LASzip/build/lib/liblaszip_api.dylib"
+const laszip = Libdl.find_library(["laszip_api"])
+isempty(laszip) && error("could not find laszip library")
 
 function renameat(arg1::Cint, arg2, arg3::Cint, arg4)
     ccall((:renameat, laszip), Cint, (Cint, Cstring, Cint, Cstring), arg1, arg2, arg3, arg4)
