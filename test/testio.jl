@@ -10,7 +10,8 @@ workdir = dirname(@__FILE__)
 filename = "libLAS_1.2.laz" # point format 0
 testfile = joinpath(workdir, filename)
 
-header, pointdata = load(testfile)
+header, pointdata_all = load(testfile)
+# @show header
 
 @test header.version_major == 1
 @test header.version_minor == 2
@@ -19,3 +20,12 @@ header, pointdata = load(testfile)
 @test header.x_scale == 0.01
 @test header.y_max == 379999.99
 @test header.header_size == 227
+
+# Test ranges
+_, pointdata_276 = load(testfile, range=276)
+_, pointdata_array = load(testfile, range=[1,276,277,497536])
+_, pointdata_colon = load(testfile, range=:)
+
+@test pointdata_all[1] == pointdata_colon[1] == pointdata_array[1]
+@test pointdata_276[1] == pointdata_colon[276] == pointdata_array[2]
+@test pointdata_all[end] == pointdata_colon[end] == pointdata_array[end]
