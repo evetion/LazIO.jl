@@ -17,3 +17,4 @@ before_install:
   - cd LASzip-3.1.1 && mkdir build && cd build && cmake ..
   - make
   - export PATH=$PATH:$PWD:$PWD/lib/
+  - cd ../../  # back to our git root
