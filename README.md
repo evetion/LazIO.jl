@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/evetion/LazIO.jl.svg?branch=master)](https://travis-ci.org/evetion/LazIO.jl)
+
 # LazIO
 Extends LasIO with Laszip integration
 
