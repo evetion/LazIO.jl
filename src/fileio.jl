@@ -10,10 +10,6 @@ macro check(obj, ex)
     return :( $(esc(ex)) == 0 ? nothing : laszip_error($(esc(obj))) )
 end
 
-load(f::File{format"LAZ"}) = load(f.filename)
-load(f::File{format"LAZ"}; range::Union{UnitRange{Integer},Integer, Colon, Array{Int64, 1}}=:) = load(f.filename, range=range)
-loadheader(f::File{format"LAZ"}) = loadheader(f.filename)
-
 function loadheader(f::String)
     # Setup laszip reader
     laszip_reader = Ref{Ptr{Void}}()
@@ -25,7 +21,7 @@ function loadheader(f::String)
     is_compressed[] == 0 ? nothing : info("File $f is compressed")
 
     # Get header
-    header_ptr = Ref{Ptr{laszip_header}}()
+    header_ptr = Ref{Ptr{Header}}()
     @check laszip_reader[] laszip_get_header_pointer(laszip_reader[], header_ptr)
     header = LasHeader(unsafe_load(header_ptr[]))
 
@@ -46,6 +42,8 @@ function load(f::String; range::Union{UnitRange{Integer},Integer, Colon, Array{I
     pfo = pointer_from_objref
     pto = unsafe_pointer_to_objref
 
+    # TODO make a separate function that returns a VersionNumber
+    # plus set a const in init? https://github.com/visr/GDAL.jl/blob/54160bbd0f49f7f1f80c33947b0016d7d19c4314/src/GDAL.jl#L89
     laszip_get_version(version_major, version_minor, version_revision, version_build)
     info("LASzip DLL $(version_major[]) $(version_minor[]) $(version_revision[]) (build $(version_build[]))")
 
@@ -59,12 +57,12 @@ function load(f::String; range::Union{UnitRange{Integer},Integer, Colon, Array{I
     is_compressed[] == 0 ? nothing : info("File $f is compressed")
 
     # Get header
-    header_ptr = Ref{Ptr{laszip_header}}()
+    header_ptr = Ref{Ptr{Header}}()
     @check laszip_reader[] laszip_get_header_pointer(laszip_reader[], header_ptr)
     header = LasHeader(unsafe_load(header_ptr[]))
 
     # Get a pointer to the points that will be read
-    point_ptr = Ref{Ptr{laszip_point}}()
+    point_ptr = Ref{Ptr{Point}}()
     @check laszip_reader[] laszip_get_point_pointer(laszip_reader[], point_ptr)
 
     n = header.records_count

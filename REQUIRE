@@ -1,4 +1,3 @@
 julia 0.6
-FileIO
-Parameters
+Parameters 0.6.0
 LasIO 0.0.1

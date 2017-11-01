@@ -1,16 +1,13 @@
-push!(LOAD_PATH, "../")
-
-using FileIO
 using LazIO
 using Base.Test
 
-workdir = dirname(@__FILE__)
+workdir = @__DIR__
 
 # source: http://www.liblas.org/samples/
 filename = "libLAS_1.2.laz" # point format 0
 testfile = joinpath(workdir, filename)
 
-header, pointdata_all = load(testfile)
+header, pointdata_all = LazIO.load(testfile)
 # @show header
 
 @test header.version_major == 1
@@ -22,9 +19,9 @@ header, pointdata_all = load(testfile)
 @test header.header_size == 227
 
 # Test ranges
-_, pointdata_276 = load(testfile, range=276)
-_, pointdata_array = load(testfile, range=[1,276,277,497536])
-_, pointdata_colon = load(testfile, range=:)
+_, pointdata_276 = LazIO.load(testfile, range=276)
+_, pointdata_array = LazIO.load(testfile, range=[1,276,277,497536])
+_, pointdata_colon = LazIO.load(testfile, range=:)
 
 @test pointdata_all[1] == pointdata_colon[1] == pointdata_array[1]
 @test pointdata_276[1] == pointdata_colon[276] == pointdata_array[2]

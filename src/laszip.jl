@@ -1,7 +1,8 @@
 # Julia wrapper for header: laszip_api.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-const laszip = Libdl.find_library(["liblaszip_api"])
+const laszip = Libdl.find_library(["liblaszip_api", "laszip"])
+
 isempty(laszip) && error("could not find laszip library")
 
 function renameat(arg1::Cint, arg2, arg3::Cint, arg4)
@@ -17,75 +18,75 @@ function renameatx_np(arg1::Cint, arg2, arg3::Cint, arg4, arg5::UInt32)
 end
 
 function clearerr(arg1)
-    ccall((:clearerr, laszip), Void, (Ptr{FILE},), arg1)
+    ccall((:clearerr, laszip), Void, (Ptr{Void},), arg1)
 end
 
 function fclose(arg1)
-    ccall((:fclose, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:fclose, laszip), Cint, (Ptr{Void},), arg1)
 end
 
 function feof(arg1)
-    ccall((:feof, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:feof, laszip), Cint, (Ptr{Void},), arg1)
 end
 
 function ferror(arg1)
-    ccall((:ferror, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:ferror, laszip), Cint, (Ptr{Void},), arg1)
 end
 
 function fflush(arg1)
-    ccall((:fflush, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:fflush, laszip), Cint, (Ptr{Void},), arg1)
 end
 
 function fgetc(arg1)
-    ccall((:fgetc, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:fgetc, laszip), Cint, (Ptr{Void},), arg1)
 end
 
 function fgetpos(arg1, arg2)
-    ccall((:fgetpos, laszip), Cint, (Ptr{FILE}, Ptr{fpos_t}), arg1, arg2)
+    ccall((:fgetpos, laszip), Cint, (Ptr{Void}, Ptr{Void}), arg1, arg2)
 end
 
 function fgets(arg1, arg2::Cint, arg3)
-    ccall((:fgets, laszip), Cstring, (Cstring, Cint, Ptr{FILE}), arg1, arg2, arg3)
+    ccall((:fgets, laszip), Cstring, (Cstring, Cint, Ptr{Void}), arg1, arg2, arg3)
 end
 
 function fopen(__filename, __mode)
-    ccall((:fopen, laszip), Ptr{FILE}, (Cstring, Cstring), __filename, __mode)
+    ccall((:fopen, laszip), Ptr{Void}, (Cstring, Cstring), __filename, __mode)
 end
 
 function fputc(arg1::Cint, arg2)
-    ccall((:fputc, laszip), Cint, (Cint, Ptr{FILE}), arg1, arg2)
+    ccall((:fputc, laszip), Cint, (Cint, Ptr{Void}), arg1, arg2)
 end
 
 function fputs(arg1, arg2)
-    ccall((:fputs, laszip), Cint, (Cstring, Ptr{FILE}), arg1, arg2)
+    ccall((:fputs, laszip), Cint, (Cstring, Ptr{Void}), arg1, arg2)
 end
 
 function fread(__ptr, __size::Csize_t, __nitems::Csize_t, __stream)
-    ccall((:fread, laszip), Csize_t, (Ptr{Void}, Csize_t, Csize_t, Ptr{FILE}), __ptr, __size, __nitems, __stream)
+    ccall((:fread, laszip), Csize_t, (Ptr{Void}, Csize_t, Csize_t, Ptr{Void}), __ptr, __size, __nitems, __stream)
 end
 
 function freopen(arg1, arg2, arg3)
-    ccall((:freopen, laszip), Ptr{FILE}, (Cstring, Cstring, Ptr{FILE}), arg1, arg2, arg3)
+    ccall((:freopen, laszip), Ptr{Void}, (Cstring, Cstring, Ptr{Void}), arg1, arg2, arg3)
 end
 
 function fseek(arg1, arg2::Clong, arg3::Cint)
-    ccall((:fseek, laszip), Cint, (Ptr{FILE}, Clong, Cint), arg1, arg2, arg3)
+    ccall((:fseek, laszip), Cint, (Ptr{Void}, Clong, Cint), arg1, arg2, arg3)
 end
 
 function fsetpos(arg1, arg2)
-    ccall((:fsetpos, laszip), Cint, (Ptr{FILE}, Ptr{fpos_t}), arg1, arg2)
+    ccall((:fsetpos, laszip), Cint, (Ptr{Void}, Ptr{Void}), arg1, arg2)
 end
 
 function ftell(arg1)
-    ccall((:ftell, laszip), Clong, (Ptr{FILE},), arg1)
+    ccall((:ftell, laszip), Clong, (Ptr{Void},), arg1)
 end
 
 function fwrite(__ptr, __size::Csize_t, __nitems::Csize_t, __stream)
-    ccall((:fwrite, laszip), Csize_t, (Ptr{Void}, Csize_t, Csize_t, Ptr{FILE}), __ptr, __size, __nitems, __stream)
+    ccall((:fwrite, laszip), Csize_t, (Ptr{Void}, Csize_t, Csize_t, Ptr{Void}), __ptr, __size, __nitems, __stream)
 end
 
 function getc(arg1)
-    ccall((:getc, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:getc, laszip), Cint, (Ptr{Void},), arg1)
 end
 
 function getchar()
@@ -101,7 +102,7 @@ function perror(arg1)
 end
 
 function putc(arg1::Cint, arg2)
-    ccall((:putc, laszip), Cint, (Cint, Ptr{FILE}), arg1, arg2)
+    ccall((:putc, laszip), Cint, (Cint, Ptr{Void}), arg1, arg2)
 end
 
 function putchar(arg1::Cint)
@@ -121,19 +122,19 @@ function rename(__old, __new)
 end
 
 function rewind(arg1)
-    ccall((:rewind, laszip), Void, (Ptr{FILE},), arg1)
+    ccall((:rewind, laszip), Void, (Ptr{Void},), arg1)
 end
 
 function setbuf(arg1, arg2)
-    ccall((:setbuf, laszip), Void, (Ptr{FILE}, Cstring), arg1, arg2)
+    ccall((:setbuf, laszip), Void, (Ptr{Void}, Cstring), arg1, arg2)
 end
 
 function setvbuf(arg1, arg2, arg3::Cint, arg4::Csize_t)
-    ccall((:setvbuf, laszip), Cint, (Ptr{FILE}, Cstring, Cint, Csize_t), arg1, arg2, arg3, arg4)
+    ccall((:setvbuf, laszip), Cint, (Ptr{Void}, Cstring, Cint, Csize_t), arg1, arg2, arg3, arg4)
 end
 
 function tmpfile()
-    ccall((:tmpfile, laszip), Ptr{FILE}, ())
+    ccall((:tmpfile, laszip), Ptr{Void}, ())
 end
 
 function tmpnam(arg1)
@@ -141,11 +142,11 @@ function tmpnam(arg1)
 end
 
 function ungetc(arg1::Cint, arg2)
-    ccall((:ungetc, laszip), Cint, (Cint, Ptr{FILE}), arg1, arg2)
+    ccall((:ungetc, laszip), Cint, (Cint, Ptr{Void}), arg1, arg2)
 end
 
-function vfprintf(arg1, arg2, arg3::va_list)
-    ccall((:vfprintf, laszip), Cint, (Ptr{FILE}, Cstring, va_list), arg1, arg2, arg3)
+function vfprintf(arg1, arg2, arg3::Void)
+    ccall((:vfprintf, laszip), Cint, (Ptr{Void}, Cstring, Void), arg1, arg2, arg3)
 end
 
 # function vprintf(arg1, arg2)
@@ -161,35 +162,35 @@ function ctermid(arg1)
 end
 
 function fdopen(arg1::Cint, arg2)
-    ccall((:fdopen, laszip), Ptr{FILE}, (Cint, Cstring), arg1, arg2)
+    ccall((:fdopen, laszip), Ptr{Void}, (Cint, Cstring), arg1, arg2)
 end
 
 function fileno(arg1)
-    ccall((:fileno, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:fileno, laszip), Cint, (Ptr{Void},), arg1)
 end
 
 function pclose(arg1)
-    ccall((:pclose, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:pclose, laszip), Cint, (Ptr{Void},), arg1)
 end
 
 function popen(arg1, arg2)
-    ccall((:popen, laszip), Ptr{FILE}, (Cstring, Cstring), arg1, arg2)
+    ccall((:popen, laszip), Ptr{Void}, (Cstring, Cstring), arg1, arg2)
 end
 
 function flockfile(arg1)
-    ccall((:flockfile, laszip), Void, (Ptr{FILE},), arg1)
+    ccall((:flockfile, laszip), Void, (Ptr{Void},), arg1)
 end
 
 function ftrylockfile(arg1)
-    ccall((:ftrylockfile, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:ftrylockfile, laszip), Cint, (Ptr{Void},), arg1)
 end
 
 function funlockfile(arg1)
-    ccall((:funlockfile, laszip), Void, (Ptr{FILE},), arg1)
+    ccall((:funlockfile, laszip), Void, (Ptr{Void},), arg1)
 end
 
 function getc_unlocked(arg1)
-    ccall((:getc_unlocked, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:getc_unlocked, laszip), Cint, (Ptr{Void},), arg1)
 end
 
 function getchar_unlocked()
@@ -197,7 +198,7 @@ function getchar_unlocked()
 end
 
 function putc_unlocked(arg1::Cint, arg2)
-    ccall((:putc_unlocked, laszip), Cint, (Cint, Ptr{FILE}), arg1, arg2)
+    ccall((:putc_unlocked, laszip), Cint, (Cint, Ptr{Void}), arg1, arg2)
 end
 
 function putchar_unlocked(arg1::Cint)
@@ -205,27 +206,27 @@ function putchar_unlocked(arg1::Cint)
 end
 
 function getw(arg1)
-    ccall((:getw, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:getw, laszip), Cint, (Ptr{Void},), arg1)
 end
 
 function putw(arg1::Cint, arg2)
-    ccall((:putw, laszip), Cint, (Cint, Ptr{FILE}), arg1, arg2)
+    ccall((:putw, laszip), Cint, (Cint, Ptr{Void}), arg1, arg2)
 end
 
 function tempnam(__dir, __prefix)
     ccall((:tempnam, laszip), Cstring, (Cstring, Cstring), __dir, __prefix)
 end
 
-function fseeko(__stream, __offset::off_t, __whence::Cint)
-    ccall((:fseeko, laszip), Cint, (Ptr{FILE}, off_t, Cint), __stream, __offset, __whence)
+function fseeko(__stream, __offset::Void, __whence::Cint)
+    ccall((:fseeko, laszip), Cint, (Ptr{Void}, Void, Cint), __stream, __offset, __whence)
 end
 
 function ftello(__stream)
-    ccall((:ftello, laszip), off_t, (Ptr{FILE},), __stream)
+    ccall((:ftello, laszip), Void, (Ptr{Void},), __stream)
 end
 
 # function vfscanf(__stream, __format, arg1)
-#     ccall((:vfscanf, laszip), Cint, (Ptr{FILE}, Cstring, Ptr{__va_list_tag}), __stream, __format, arg1)
+#     ccall((:vfscanf, laszip), Cint, (Ptr{Void}, Cstring, Ptr{__va_list_tag}), __stream, __format, arg1)
 # end
 
 # function vscanf(__format, arg1)
@@ -240,16 +241,16 @@ end
 #     ccall((:vsscanf, laszip), Cint, (Cstring, Cstring, Ptr{__va_list_tag}), __str, __format, arg1)
 # end
 
-function vdprintf(arg1::Cint, arg2, arg3::va_list)
-    ccall((:vdprintf, laszip), Cint, (Cint, Cstring, va_list), arg1, arg2, arg3)
+function vdprintf(arg1::Cint, arg2, arg3::Void)
+    ccall((:vdprintf, laszip), Cint, (Cint, Cstring, Void), arg1, arg2, arg3)
 end
 
 function getdelim(__linep, __linecapp, __delimiter::Cint, __stream)
-    ccall((:getdelim, laszip), ssize_t, (Ptr{Cstring}, Ptr{Csize_t}, Cint, Ptr{FILE}), __linep, __linecapp, __delimiter, __stream)
+    ccall((:getdelim, laszip), Void, (Ptr{Cstring}, Ptr{Csize_t}, Cint, Ptr{Void}), __linep, __linecapp, __delimiter, __stream)
 end
 
 function getline(__linep, __linecapp, __stream)
-    ccall((:getline, laszip), ssize_t, (Ptr{Cstring}, Ptr{Csize_t}, Ptr{FILE}), __linep, __linecapp, __stream)
+    ccall((:getline, laszip), Void, (Ptr{Cstring}, Ptr{Csize_t}, Ptr{Void}), __linep, __linecapp, __stream)
 end
 
 function ctermid_r(arg1)
@@ -257,7 +258,7 @@ function ctermid_r(arg1)
 end
 
 function fgetln(arg1, arg2)
-    ccall((:fgetln, laszip), Cstring, (Ptr{FILE}, Ptr{Csize_t}), arg1, arg2)
+    ccall((:fgetln, laszip), Cstring, (Ptr{Void}, Ptr{Csize_t}), arg1, arg2)
 end
 
 function fmtcheck(arg1, arg2)
@@ -265,27 +266,27 @@ function fmtcheck(arg1, arg2)
 end
 
 function fpurge(arg1)
-    ccall((:fpurge, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:fpurge, laszip), Cint, (Ptr{Void},), arg1)
 end
 
 function setbuffer(arg1, arg2, arg3::Cint)
-    ccall((:setbuffer, laszip), Void, (Ptr{FILE}, Cstring, Cint), arg1, arg2, arg3)
+    ccall((:setbuffer, laszip), Void, (Ptr{Void}, Cstring, Cint), arg1, arg2, arg3)
 end
 
 function setlinebuf(arg1)
-    ccall((:setlinebuf, laszip), Cint, (Ptr{FILE},), arg1)
+    ccall((:setlinebuf, laszip), Cint, (Ptr{Void},), arg1)
 end
 
-function vasprintf(arg1, arg2, arg3::va_list)
-    ccall((:vasprintf, laszip), Cint, (Ptr{Cstring}, Cstring, va_list), arg1, arg2, arg3)
+function vasprintf(arg1, arg2, arg3::Void)
+    ccall((:vasprintf, laszip), Cint, (Ptr{Cstring}, Cstring, Void), arg1, arg2, arg3)
 end
 
 function zopen(arg1, arg2, arg3::Cint)
-    ccall((:zopen, laszip), Ptr{FILE}, (Cstring, Cstring, Cint), arg1, arg2, arg3)
+    ccall((:zopen, laszip), Ptr{Void}, (Cstring, Cstring, Cint), arg1, arg2, arg3)
 end
 
 function funopen(arg1, arg2, arg3, arg4, arg5)
-    ccall((:funopen, laszip), Ptr{FILE}, (Ptr{Void}, Ptr{Void}, Ptr{Void}, Ptr{Void}, Ptr{Void}), arg1, arg2, arg3, arg4, arg5)
+    ccall((:funopen, laszip), Ptr{Void}, (Ptr{Void}, Ptr{Void}, Ptr{Void}, Ptr{Void}, Ptr{Void}), arg1, arg2, arg3, arg4, arg5)
 end
 
 function laszip_get_version(version_major, version_minor, version_revision, version_build)
@@ -313,11 +314,11 @@ function laszip_destroy(pointer::laszip_POINTER)
 end
 
 function laszip_get_header_pointer(pointer::laszip_POINTER, header_pointer)
-    ccall((:laszip_get_header_pointer, laszip), laszip_I32, (laszip_POINTER, Ref{Ptr{laszip_header}}), pointer, header_pointer)
+    ccall((:laszip_get_header_pointer, laszip), laszip_I32, (laszip_POINTER, Ref{Ptr{Header}}), pointer, header_pointer)
 end
 
 function laszip_get_point_pointer(pointer::laszip_POINTER, point_pointer)
-    ccall((:laszip_get_point_pointer, laszip), laszip_I32, (laszip_POINTER, Ref{Ptr{laszip_point}}), pointer, point_pointer)
+    ccall((:laszip_get_point_pointer, laszip), laszip_I32, (laszip_POINTER, Ref{Ptr{Point}}), pointer, point_pointer)
 end
 
 function laszip_get_point_count(pointer::laszip_POINTER, count)
@@ -325,7 +326,7 @@ function laszip_get_point_count(pointer::laszip_POINTER, count)
 end
 
 function laszip_set_header(pointer::laszip_POINTER, header)
-    ccall((:laszip_set_header, laszip), laszip_I32, (laszip_POINTER, Ptr{laszip_header_struct}), pointer, header)
+    ccall((:laszip_set_header, laszip), laszip_I32, (laszip_POINTER, Ptr{Void}), pointer, header)
 end
 
 function laszip_set_point_type_and_size(pointer::laszip_POINTER, point_type::laszip_U8, point_size::laszip_U16)
@@ -341,7 +342,7 @@ function laszip_auto_offset(pointer::laszip_POINTER)
 end
 
 function laszip_set_point(pointer::laszip_POINTER, point)
-    ccall((:laszip_set_point, laszip), laszip_I32, (laszip_POINTER, Ptr{laszip_point_struct}), pointer, point)
+    ccall((:laszip_set_point, laszip), laszip_I32, (laszip_POINTER, Ptr{Void}), pointer, point)
 end
 
 function laszip_set_coordinates(pointer::laszip_POINTER, coordinates)
@@ -353,7 +354,7 @@ function laszip_get_coordinates(pointer::laszip_POINTER, coordinates)
 end
 
 function laszip_set_geokeys(pointer::laszip_POINTER, number::laszip_U32, key_entries)
-    ccall((:laszip_set_geokeys, laszip), laszip_I32, (laszip_POINTER, laszip_U32, Ptr{laszip_geokey_struct}), pointer, number, key_entries)
+    ccall((:laszip_set_geokeys, laszip), laszip_I32, (laszip_POINTER, laszip_U32, Ptr{Void}), pointer, number, key_entries)
 end
 
 function laszip_set_geodouble_params(pointer::laszip_POINTER, number::laszip_U32, geodouble_params)
@@ -453,9 +454,15 @@ function laszip_close_reader(pointer::laszip_POINTER)
 end
 
 function laszip_load_dll()
-    ccall((:laszip_load_dll, laszip), laszip_I32, ())
+    # cannot find these on windows
+    @static if !is_windows()
+        ccall((:laszip_load_dll, laszip), laszip_I32, ())
+    end
 end
 
 function laszip_unload_dll()
-    ccall((:laszip_unload_dll, laszip), laszip_I32, ())
+    # cannot find these on windows
+    @static if !is_windows()
+        ccall((:laszip_unload_dll, laszip), laszip_I32, ())
+    end
 end
