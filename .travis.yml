@@ -15,6 +15,5 @@ before_install:
   - wget https://github.com/LASzip/LASzip/archive/3.1.1.tar.gz
   - tar -xzf 3.1.1.tar.gz
   - cd LASzip-3.1.1 && mkdir build && cd build && cmake ..
-  - make && make install
-  - export PATH=$PATH:$PWD
-
+  - make
+  - export PATH=$PATH:$PWD:$PWD/lib/
