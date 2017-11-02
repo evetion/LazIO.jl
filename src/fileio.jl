@@ -35,10 +35,10 @@ function loadheader(f::String)
 end
 
 function load(f::String; range::Union{UnitRange{Integer},Integer, Colon, Array{Int64, 1}}=:)
-    version_major = Ref{laszip_U8}(0)
-    version_minor = Ref{laszip_U8}(0)
-    version_revision = Ref{laszip_U16}(0)
-    version_build = Ref{laszip_U32}(0)
+    version_major = Ref{UInt8}(0)
+    version_minor = Ref{UInt8}(0)
+    version_revision = Ref{UInt16}(0)
+    version_build = Ref{UInt32}(0)
     pfo = pointer_from_objref
     pto = unsafe_pointer_to_objref
 
