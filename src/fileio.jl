@@ -10,9 +10,9 @@ macro check(obj, ex)
     return :( $(esc(ex)) == 0 ? nothing : laszip_error($(esc(obj))) )
 end
 
-load(f::File{format"LAZ"}) = load(f.filename)
-load(f::File{format"LAZ"}; range::Union{UnitRange{Integer},Integer, Colon, Array{Int64, 1}}=:) = load(f.filename, range=range)
-loadheader(f::File{format"LAZ"}) = loadheader(f.filename)
+load(f::File{format"LAZ_"}) = load(f.filename)
+load(f::File{format"LAZ_"}; range::Union{UnitRange{Integer},Integer, Colon, Array{Int64, 1}}=:) = load(f.filename, range=range)
+loadheader(f::File{format"LAZ_"}) = loadheader(f.filename)
 
 function loadheader(f::String)
     # Setup laszip reader

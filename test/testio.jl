@@ -8,7 +8,7 @@ workdir = dirname(@__FILE__)
 
 # source: http://www.liblas.org/samples/
 filename = "libLAS_1.2.laz" # point format 0
-testfile = joinpath(workdir, filename)
+testfile = File{format"LAZ_"}(joinpath(workdir, filename))
 
 header, pointdata_all = load(testfile)
 # @show header

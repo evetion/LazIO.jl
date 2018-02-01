@@ -12,7 +12,8 @@ include("convert.jl")
 
 
 function __init__()
-    add_format(format"LAZ", (), ".laz", [:LazIO])
+    # temporary _ until LasIO defers this key
+    add_format(format"LAZ_", (), ".laz", [:LazIO])
     laszip_load_dll()
     atexit(laszip_unload_dll)
 end
