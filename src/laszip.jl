@@ -1,7 +1,7 @@
 # Julia wrapper for header: laszip_api.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-const laszip = Libdl.find_library(["liblaszip_api"])
+const laszip = Libdl.find_library(["laszip", "liblaszip"])
 isempty(laszip) && error("could not find laszip library")
 
 function renameat(arg1::Cint, arg2, arg3::Cint, arg4)
@@ -450,12 +450,4 @@ end
 
 function laszip_close_reader(pointer::laszip_POINTER)
     ccall((:laszip_close_reader, laszip), laszip_I32, (laszip_POINTER,), pointer)
-end
-
-function laszip_load_dll()
-    ccall((:laszip_load_dll, laszip), laszip_I32, ())
-end
-
-function laszip_unload_dll()
-    ccall((:laszip_unload_dll, laszip), laszip_I32, ())
 end

@@ -1,16 +1,22 @@
+image:
+- Visual Studio 2017
+
+platform:
+- x86
+- x64
+
+version: 1.0.{build}-{branch}
+
 environment:
   matrix:
   - JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x86/0.6/julia-0.6-latest-win32.exe"
+    VS_PLATFORM: x86
   - JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x64/0.6/julia-0.6-latest-win64.exe"
+    VS_PLATFORM: x64
   - JULIA_URL: "https://julialangnightlies-s3.julialang.org/bin/winnt/x86/julia-latest-win32.exe"
+    VS_PLATFORM: x86
   - JULIA_URL: "https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe"
-
-## uncomment the following lines to allow failures on nightly julia
-## (tests will run but not make your overall status red)
-matrix:
- allow_failures:
- - JULIA_URL: "https://julialangnightlies-s3.julialang.org/bin/winnt/x86/julia-latest-win32.exe"
- - JULIA_URL: "https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe"
+    VS_PLATFORM: x64
 
 branches:
   only:
@@ -25,28 +31,50 @@ notifications:
 
 install:
   - ps: "[System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12"
-# If there's a newer build queued for the same PR, cancel this one
+  # If there's a newer build queued for the same PR, cancel this one
   - ps: if ($env:APPVEYOR_PULL_REQUEST_NUMBER -and $env:APPVEYOR_BUILD_NUMBER -ne ((Invoke-RestMethod `
         https://ci.appveyor.com/api/projects/$env:APPVEYOR_ACCOUNT_NAME/$env:APPVEYOR_PROJECT_SLUG/history?recordsNumber=50).builds | `
         Where-Object pullRequestId -eq $env:APPVEYOR_PULL_REQUEST_NUMBER)[0].buildNumber) { `
         throw "There are newer queued builds for this pull request, failing early." }
-# Download most recent Julia Windows binary
+  # Download most recent Julia Windows binary
   - ps: (new-object net.webclient).DownloadFile(
         $env:JULIA_URL,
         "C:\projects\julia-binary.exe")
-# Run installer silently, output to C:\projects\julia
+  # Run installer silently, output to C:\projects\julia
   - C:\projects\julia-binary.exe /S /D=C:\projects\julia
 
+
+matrix:
+  exclude:
+  - platform: x86
+    VS_PLATFORM: x64
+  - platform: x64
+    VS_PLATFORM: x86
+  allow_failures:
+  - JULIA_URL: "https://julialangnightlies-s3.julialang.org/bin/winnt/x86/julia-latest-win32.exe"
+  - JULIA_URL: "https://julialangnightlies-s3.julialang.org/bin/winnt/x86/julia-latest-win32.exe"
+    platform: x86  # unable to get it working
+  - JULIA_URL: "https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe"
+
+configuration: Release
+
 before_build:
-  - call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
-  - curl -fsS -o 3.1.1.tar.gz https://github.com/LASzip/LASzip/archive/3.1.1.tar.gz
+  - IF "%PLATFORM%" == "x86" (echo "Using x86 vcvarsall.bat")
+  - IF "%PLATFORM%" == "x86" (call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat")
+  - IF "%PLATFORM%" == "x64" (echo "Using x64 vcvarsall.bat")
+  - IF "%PLATFORM%" == "x64" (call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat")
+  - curl -fsSL -o 3.1.1.tar.gz https://github.com/LASzip/LASzip/archive/3.1.1.tar.gz
   - 7z x 3.1.1.tar.gz
+  - 7z x 3.1.1.tar
   - cd LASzip-3.1.1
   - mkdir build
   - cd build
-  - cmake -G "Visual Studio 15 2017 Win64" ..
-  - cmake --build .
-  - set PATH=%PATH%;%CD%
+  - cmake -DCMAKE_GENERATOR_PLATFORM=%PLATFORM% -DCMAKE_C_FLAGS="/W0"  ..
+  - cmake --build . --config %CONFIGURATION%
+  - dir bin
+  - echo %CD%\bin\
+  - set PATH=%PATH%;%CD%\bin\
+  - cd ..\..\
 
 build_script:
 # Need to convert from shallow to complete for Pkg.clone to work
