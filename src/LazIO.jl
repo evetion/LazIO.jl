@@ -5,6 +5,7 @@ module LazIO
 using FileIO
 using LasIO
 
+include("utils.jl")
 include("laszip_h.jl")
 include("laszip.jl")
 include("fileio.jl")
