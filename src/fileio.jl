@@ -1,15 +1,5 @@
 # File load
 
-function laszip_error(laszip_obj::Ptr{Void})
-    errstr = Ref{Ptr{laszip_CHAR}}()
-    laszip_get_error(laszip_obj, errstr)
-    error(unsafe_string(errstr[]))
-end
-
-macro check(obj, ex)
-    return :( $(esc(ex)) == 0 ? nothing : laszip_error($(esc(obj))) )
-end
-
 load(f::File{format"LAZ_"}) = load(f.filename)
 load(f::File{format"LAZ_"}; range::Union{UnitRange{Integer},Integer, Colon, Array{Int64, 1}}=:) = load(f.filename, range=range)
 loadheader(f::File{format"LAZ_"}) = loadheader(f.filename)
@@ -38,11 +28,11 @@ function loadheader(f::String)
     header
 end
 
-function load(f::String; range::Union{UnitRange{Integer},Integer, Colon, Array{Int64, 1}}=:)
-    version_major = Ref{laszip_U8}(0)
-    version_minor = Ref{laszip_U8}(0)
-    version_revision = Ref{laszip_U16}(0)
-    version_build = Ref{laszip_U32}(0)
+function load(f::String; range::Union{UnitRange{Int64}, Integer, Colon, Array{Int64, 1}}=:)
+    version_major = Ref{UInt8}(0)
+    version_minor = Ref{UInt8}(0)
+    version_revision = Ref{UInt16}(0)
+    version_build = Ref{UInt32}(0)
     pfo = pointer_from_objref
     pto = unsafe_pointer_to_objref
 
@@ -81,7 +71,7 @@ function load(f::String; range::Union{UnitRange{Integer},Integer, Colon, Array{I
             # Seek it and set pointer
             info("Seeking to point $ii")
             laszip_seek_point(laszip_reader[], ii-1)
-            pointerindex = ii
+            pointerindex = ii-1
         end
         laszip_read_point(laszip_reader[])
         pointerindex += 1

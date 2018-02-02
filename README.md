@@ -4,14 +4,31 @@
 
 
 # LazIO
-Extends LasIO with Laszip integration
+Extends LasIO with Laszip integration.
 
-Uses the laszip shared library to read compressed las files (*.laz) into the uncompressed format that LasIO reads natively.
+Uses the [LASzip](https://github.com/LASzip/LASzip/) shared library to read compressed las files (*.laz) into the uncompressed format that [LasIO](https://github.com/visr/LasIO.jl) reads natively.
 
-At the moment this is read-only. 
+```julia
+using LazIO
+LazIO.load("test/libLAS_1.2.laz")
+INFO: LASzip DLL 3 1 0 (build 170823)
+INFO: File test/libLAS_1.2.laz is compressed
+INFO: Reading 497536 point(s).
+(LasHeader with 497536 points.
+, Vector{LasIO.LasPoint0} with 497536 points.
+)
 
-## TODO
-- Write
-- Selections and filters 
+h, p = LazIO.load("test/libLAS_1.2.laz", range=2:10)
+INFO: LASzip DLL 3 1 0 (build 170823)
+INFO: File test/libLAS_1.2.laz is compressed
+INFO: Reading 9 point(s).
+INFO: Seeking to point 2
+(LasHeader with 497536 points.
+, Vector{LasIO.LasPoint0} with 9 points.
+)
+
+```
+
+For the moment this wrapper only supports reading.
 
 *credits to joa-quim for another, older implementation of the laszip library in Julia*
