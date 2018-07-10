@@ -1,7 +1,7 @@
 # Julia wrapper for header: laszip_api.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-const laszip = liblaszip
+const laszip = replace(liblaszip, "_api", "")
 info("Using laszip library at $liblaszip")
 
 # function renameat(arg1::Cint, arg2, arg3::Cint, arg4)

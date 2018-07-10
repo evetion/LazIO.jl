@@ -28,7 +28,7 @@ function loadheader(f::String)
     header
 end
 
-function load(f::String; range::Union{UnitRange{Int64}, Integer, Colon, Array{Int64, 1}}=:)
+function load(f::String; range::Union{UnitRange{T}, Integer, Colon, Array{T, 1}} where T <:Integer=:)
     version_major = Ref{UInt8}(0)
     version_minor = Ref{UInt8}(0)
     version_revision = Ref{UInt16}(0)
