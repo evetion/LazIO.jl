@@ -1,7 +1,7 @@
 # File load
 
 load(f::File{format"LAZ_"}) = load(f.filename)
-load(f::File{format"LAZ_"}; range::Union{UnitRange{Integer},Integer, Colon, Array{Int64, 1}}=:) = load(f.filename, range=range)
+load(f::File{format"LAZ_"}; range::Union{UnitRange{T},Integer, Colon, Array{T, 1}} where T<:Integer=:) = load(f.filename, range=range)
 loadheader(f::File{format"LAZ_"}) = loadheader(f.filename)
 
 function loadheader(f::String)
