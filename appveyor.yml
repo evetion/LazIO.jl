@@ -58,24 +58,6 @@ matrix:
 
 configuration: Release
 
-before_build:
-  - IF "%PLATFORM%" == "x86" (echo "Using x86 vcvarsall.bat")
-  - IF "%PLATFORM%" == "x86" (call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat")
-  - IF "%PLATFORM%" == "x64" (echo "Using x64 vcvarsall.bat")
-  - IF "%PLATFORM%" == "x64" (call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat")
-  - curl -fsSL -o 3.1.1.tar.gz https://github.com/LASzip/LASzip/archive/3.1.1.tar.gz
-  - 7z x 3.1.1.tar.gz
-  - 7z x 3.1.1.tar
-  - cd LASzip-3.1.1
-  - mkdir build
-  - cd build
-  - cmake -DCMAKE_GENERATOR_PLATFORM=%PLATFORM% -DCMAKE_C_FLAGS="/W0"  ..
-  - cmake --build . --config %CONFIGURATION%
-  - dir bin
-  - echo %CD%\bin\
-  - set PATH=%PATH%;%CD%\bin\
-  - cd ..\..\
-
 build_script:
 # Need to convert from shallow to complete for Pkg.clone to work
   - IF EXIST .git\shallow (git fetch --unshallow)
