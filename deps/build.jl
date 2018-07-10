@@ -5,7 +5,7 @@ const verbose = "--verbose" in ARGS
 const prefix = Prefix(get([a for a in ARGS if a != "--verbose"], 1, joinpath(@__DIR__, "usr")))
 products = [
     LibraryProduct(prefix, String["liblaszip"], :liblaszip),
-    LibraryProduct(prefix, String["liblaszip_api"], :liblaszip_api),
+    # LibraryProduct(prefix, String["liblaszip_api"], :liblaszip_api),
 ]
 
 # Download binaries from hosted location
