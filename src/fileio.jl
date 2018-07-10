@@ -70,7 +70,7 @@ function load(f::String; range::Union{UnitRange{Int64}, Integer, Colon, Array{In
         if ii-1 != pointerindex
             # Seek it and set pointer
             info("Seeking to point $ii")
-            laszip_seek_point(laszip_reader[], ii-1)
+            laszip_seek_point(laszip_reader[], Int64(ii-1))
             pointerindex = ii-1
         end
         laszip_read_point(laszip_reader[])

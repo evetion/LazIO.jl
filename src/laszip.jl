@@ -2,6 +2,7 @@
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
 const laszip = liblaszip
+info("Using laszip library at $liblaszip")
 
 # function renameat(arg1::Cint, arg2, arg3::Cint, arg4)
 #     ccall((:renameat, laszip), Cint, (Cint, Cstring, Cint, Cstring), arg1, arg2, arg3, arg4)
