@@ -17,6 +17,10 @@ environment:
     VS_PLATFORM: x86
   - JULIA_URL: "https://julialangnightlies-s3.julialang.org/bin/winnt/x64/julia-latest-win64.exe"
     VS_PLATFORM: x64
+  - JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x86/0.7/julia-0.7.0-win32.exe"
+    VS_PLATFORM: x86
+  - JULIA_URL: "https://julialang-s3.julialang.org/bin/winnt/x64/0.7/julia-0.7.0-win64.exe"
+    VS_PLATFORM: x64
 
 branches:
   only:
@@ -59,8 +63,7 @@ configuration: Release
 build_script:
 # Need to convert from shallow to complete for Pkg.clone to work
   - IF EXIST .git\shallow (git fetch --unshallow)
-  - C:\projects\julia\bin\julia -e "versioninfo();
-      Pkg.clone(pwd(), \"LazIO\"); Pkg.build(\"LazIO\")"
+  - C:\projects\julia\bin\julia -e "if VERSION < v"0.7.0"; Pkg.clone(pwd()) ; else; using Pkg; Pkg.up(); end; Pkg.build("LazIO");"
 
 test_script:
-  - C:\projects\julia\bin\julia -e "Pkg.test(\"LazIO\")"
+  - C:\projects\julia\bin\julia -e "VERSION < v\"0.7.0\" || Pkg.test(\"LazIO\")"

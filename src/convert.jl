@@ -3,8 +3,8 @@
 import Base.convert
 
 "Conversion to LasIO header"
-convert(::Type{LasHeader}, h::laszip_header) =
-    LasHeader(
+LasHeader(h::laszip_header) =
+    LasIO.LasHeader(
         h.file_source_ID,
         h.global_encoding,
         h.project_ID_GUID_data_1,
@@ -70,7 +70,7 @@ convert(::Type{LasPoint1}, p::laszip_point) =
     )
 
 "ASPRS LAS point data record format 2"
-convert(::Type{LasPoint2}, p::laszip_point) = 
+convert(::Type{LasPoint2}, p::laszip_point) =
     LasPoint2(
         p.X,
         p.Y,

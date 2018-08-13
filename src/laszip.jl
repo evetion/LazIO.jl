@@ -1,8 +1,8 @@
 # Julia wrapper for header: laszip_api.h
 # Automatically generated using Clang.jl wrap_c, version 0.0.0
 
-const laszip = replace(liblaszip, "_api", "")
-info("Using laszip library at $liblaszip")
+const laszip = replace(liblaszip, "_api" => "")
+@info "Using laszip library at $liblaszip"
 
 # function renameat(arg1::Cint, arg2, arg3::Cint, arg4)
 #     ccall((:renameat, laszip), Cint, (Cint, Cstring, Cint, Cstring), arg1, arg2, arg3, arg4)
@@ -17,7 +17,7 @@ info("Using laszip library at $liblaszip")
 # end
 
 # function clearerr(arg1)
-#     ccall((:clearerr, laszip), Void, (Ptr{FILE},), arg1)
+#     ccall((:clearerr, laszip), Nothing, (Ptr{FILE},), arg1)
 # end
 
 # function fclose(arg1)
@@ -61,7 +61,7 @@ info("Using laszip library at $liblaszip")
 # end
 
 # function fread(__ptr, __size::Csize_t, __nitems::Csize_t, __stream)
-#     ccall((:fread, laszip), Csize_t, (Ptr{Void}, Csize_t, Csize_t, Ptr{FILE}), __ptr, __size, __nitems, __stream)
+#     ccall((:fread, laszip), Csize_t, (Ptr{Nothing}, Csize_t, Csize_t, Ptr{FILE}), __ptr, __size, __nitems, __stream)
 # end
 
 # function freopen(arg1, arg2, arg3)
@@ -81,7 +81,7 @@ info("Using laszip library at $liblaszip")
 # end
 
 # function fwrite(__ptr, __size::Csize_t, __nitems::Csize_t, __stream)
-#     ccall((:fwrite, laszip), Csize_t, (Ptr{Void}, Csize_t, Csize_t, Ptr{FILE}), __ptr, __size, __nitems, __stream)
+#     ccall((:fwrite, laszip), Csize_t, (Ptr{Nothing}, Csize_t, Csize_t, Ptr{FILE}), __ptr, __size, __nitems, __stream)
 # end
 
 # function getc(arg1)
@@ -97,7 +97,7 @@ info("Using laszip library at $liblaszip")
 # end
 
 # function perror(arg1)
-#     ccall((:perror, laszip), Void, (Cstring,), arg1)
+#     ccall((:perror, laszip), Nothing, (Cstring,), arg1)
 # end
 
 # function putc(arg1::Cint, arg2)
@@ -121,11 +121,11 @@ info("Using laszip library at $liblaszip")
 # end
 
 # function rewind(arg1)
-#     ccall((:rewind, laszip), Void, (Ptr{FILE},), arg1)
+#     ccall((:rewind, laszip), Nothing, (Ptr{FILE},), arg1)
 # end
 
 # function setbuf(arg1, arg2)
-#     ccall((:setbuf, laszip), Void, (Ptr{FILE}, Cstring), arg1, arg2)
+#     ccall((:setbuf, laszip), Nothing, (Ptr{FILE}, Cstring), arg1, arg2)
 # end
 
 # function setvbuf(arg1, arg2, arg3::Cint, arg4::Csize_t)
@@ -177,7 +177,7 @@ info("Using laszip library at $liblaszip")
 # end
 
 # function flockfile(arg1)
-#     ccall((:flockfile, laszip), Void, (Ptr{FILE},), arg1)
+#     ccall((:flockfile, laszip), Nothing, (Ptr{FILE},), arg1)
 # end
 
 # function ftrylockfile(arg1)
@@ -185,7 +185,7 @@ info("Using laszip library at $liblaszip")
 # end
 
 # function funlockfile(arg1)
-#     ccall((:funlockfile, laszip), Void, (Ptr{FILE},), arg1)
+#     ccall((:funlockfile, laszip), Nothing, (Ptr{FILE},), arg1)
 # end
 
 # function getc_unlocked(arg1)
@@ -269,7 +269,7 @@ info("Using laszip library at $liblaszip")
 # end
 
 # function setbuffer(arg1, arg2, arg3::Cint)
-#     ccall((:setbuffer, laszip), Void, (Ptr{FILE}, Cstring, Cint), arg1, arg2, arg3)
+#     ccall((:setbuffer, laszip), Nothing, (Ptr{FILE}, Cstring, Cint), arg1, arg2, arg3)
 # end
 
 # function setlinebuf(arg1)
@@ -285,7 +285,7 @@ info("Using laszip library at $liblaszip")
 # end
 
 # function funopen(arg1, arg2, arg3, arg4, arg5)
-#     ccall((:funopen, laszip), Ptr{FILE}, (Ptr{Void}, Ptr{Void}, Ptr{Void}, Ptr{Void}, Ptr{Void}), arg1, arg2, arg3, arg4, arg5)
+#     ccall((:funopen, laszip), Ptr{FILE}, (Ptr{Nothing}, Ptr{Nothing}, Ptr{Nothing}, Ptr{Nothing}, Ptr{Nothing}), arg1, arg2, arg3, arg4, arg5)
 # end
 
 function laszip_get_version(version_major, version_minor, version_revision, version_build)

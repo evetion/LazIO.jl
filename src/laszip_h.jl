@@ -10,7 +10,7 @@ const __darwin_ssize_t = Clong
 const __darwin_intptr_t = Clong
 const size_t = __darwin_size_t
 const fpos_t = __darwin_off_t
-const FILE = Void
+const FILE = Nothing
 const va_list = __darwin_va_list
 const off_t = __darwin_off_t
 const ssize_t = __darwin_ssize_t
@@ -27,7 +27,7 @@ const laszip_I64 = Int64
 const laszip_CHAR = UInt8
 const laszip_F32 = Cfloat
 const laszip_F64 = Cdouble
-const laszip_POINTER = Ptr{Void}
+const laszip_POINTER = Ptr{Nothing}
 
 @with_kw mutable struct laszip_geokey
     key_id::laszip_U16 = laszip_U16(0)
@@ -36,7 +36,7 @@ const laszip_POINTER = Ptr{Void}
     value_offset::laszip_U16 = laszip_U16(0)
 end
 
-const laszip_geokey_struct = Void
+const laszip_geokey_struct = Nothing
 
 @with_kw mutable struct laszip_vlr
     reserved::laszip_U16 = laszip_U16(0)
@@ -47,7 +47,7 @@ const laszip_geokey_struct = Void
     data::Ptr{laszip_U8} = pointer("")
 end
 
-const laszip_vlr_struct = Void
+const laszip_vlr_struct = Nothing
 
 @with_kw mutable struct laszip_header
     file_source_ID::laszip_U16 = laszip_U16(0)
@@ -98,7 +98,7 @@ const laszip_vlr_struct = Void
     user_data_after_header::Ptr{laszip_U8} = pointer("")
 end
 
-const laszip_header_struct = Void
+const laszip_header_struct = Nothing
 
 @with_kw mutable struct laszip_point
     X::laszip_I32 = laszip_I32(0)
@@ -131,4 +131,4 @@ const laszip_header_struct = Void
     extra_bytes::Ptr{laszip_U8} = pointer("")
 end
 
-const laszip_point_struct = Void
+const laszip_point_struct = Nothing

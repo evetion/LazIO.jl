@@ -3,7 +3,7 @@ push!(LOAD_PATH, "../")
 using FileIO
 using LazIO
 using LasIO
-using Base.Test
+using Test
 
 workdir = dirname(@__FILE__)
 

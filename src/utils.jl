@@ -1,4 +1,4 @@
-function laszip_error(laszip_obj::Ptr{Void})
+function laszip_error(laszip_obj::Ptr{Nothing})
     errstr = Ref{Ptr{UInt8}}()
     laszip_get_error(laszip_obj, errstr)
     error(unsafe_string(errstr[]))
