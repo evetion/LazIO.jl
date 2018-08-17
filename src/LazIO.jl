@@ -1,7 +1,6 @@
-__precompile__()
 module LazIO
 
-using Compat.Libdl
+using Libdl
 using FileIO
 using LasIO
 
