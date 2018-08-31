@@ -24,5 +24,6 @@ include("laszip_h.jl")
 include("laszip.jl")
 include("fileio.jl")
 include("convert.jl")
+include("dataset.jl")
 
 end # module
