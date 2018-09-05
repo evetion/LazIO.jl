@@ -33,7 +33,7 @@ end
 
 """Iteration of LAZ file."""
 function Base.iterate(ds::LazDataset, state::Int)
-    if state > length(ds)
+    if state >= length(ds)
         return nothing
     else
         laszip_read_point(ds.filehandle)
