@@ -7,14 +7,8 @@ workdir = @__DIR__
 lasio_testdir = joinpath(dirname(pathof(LasIO)), "..", "test")
 # source: http://www.liblas.org/samples/
 fname_las = "libLAS_1.2.las" # point format 0
-fname = "libLAS_1.2.laz" # point format 0
-testfile_str = joinpath(lasio_testdir, fname)
-if !isfile(testfile_str)
-    @info "Creating testfile by running `laszip $fname` in $lasio_testdir"
-    cd(lasio_testdir) do
-        run(`laszip $fname_las`)
-    end
-end
+testfile_str = joinpath(lasio_testdir, fname_las)
+
 testfile = File{format"LAZ_"}(testfile_str)
 
 header, pointdata_all = load(testfile)
@@ -37,6 +31,7 @@ _, pointdata_colon = load(testfile, range=:)
 @test pointdata_276[1] == pointdata_colon[276] == pointdata_array[2]
 @test pointdata_all[end] == pointdata_colon[end] == pointdata_array[end]
 
+# Test LazDataSet
 ds = LazIO.open(testfile_str)
 @test ds isa LazIO.LazDataset
 @test first(ds) isa LazIO.laszip_point
