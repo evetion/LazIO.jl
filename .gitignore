@@ -2,4 +2,5 @@
 *.jl.*.cov
 *.jl.mem
 deps/deps.jl
+deps/usr
 *.DS_Store
