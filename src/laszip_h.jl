@@ -105,24 +105,44 @@ const laszip_header_struct = Nothing
     Y::laszip_I32 = laszip_I32(0)
     Z::laszip_I32 = laszip_I32(0)
     intensity::laszip_U16 = laszip_U16(0)
+
+    # Evil types
+    # U8 return_number : 3;
+    # U8 number_of_returns : 3;
+    # U8 scan_direction_flag : 1;
+    # U8 edge_of_flight_line : 1;  8
+    # U8 classification : 5;
+    # U8 synthetic_flag : 1;
+    # U8 keypoint_flag  : 1;
+    # U8 withheld_flag : 1;      8
     return_number::laszip_U8 = laszip_U8(0)
-    number_of_returns::laszip_U8 = laszip_U8(0)
-    scan_direction_flag::laszip_U8 = laszip_U8(0)
-    edge_of_flight_line::laszip_U8 = laszip_U8(0)
+    # number_of_returns::laszip_U8 = laszip_U8(0)
+    # scan_direction_flag::laszip_U8 = laszip_U8(0)
+    # edge_of_flight_line::laszip_U8 = laszip_U8(0)
     classification::laszip_U8 = laszip_U8(0)
-    synthetic_flag::laszip_U8 = laszip_U8(0)
-    keypoint_flag::laszip_U8 = laszip_U8(0)
-    withheld_flag::laszip_U8 = laszip_U8(0)
+    # synthetic_flag::laszip_U8 = laszip_U8(0)
+    # keypoint_flag::laszip_U8 = laszip_U8(0)
+    # withheld_flag::laszip_U8 = laszip_U8(0)
     scan_angle_rank::laszip_I8 = laszip_I8(0)
     user_data::laszip_U8 = laszip_U8(0)
     point_source_ID::laszip_U16 = laszip_U16(0)
+
+
+    # Another evil type
+    # I16 extended_scan_angle;
+    # U8 extended_point_type : 2;
+    # U8 extended_scanner_channel : 2;
+    # U8 extended_classification_flags : 4;  8
+    # U8 extended_classification;
+    # U8 extended_return_number : 4;
+    # U8 extended_number_of_returns : 4;  8
     extended_scan_angle::laszip_I16 = laszip_I16(0)
     extended_point_type::laszip_U8 = laszip_U8(0)
-    extended_scanner_channel::laszip_U8 = laszip_U8(0)
-    extended_classification_flags::laszip_U8 = laszip_U8(0)
+    # extended_scanner_channel::laszip_U8 = laszip_U8(0)
+    # extended_classification_flags::laszip_U8 = laszip_U8(0)
     extended_classification::laszip_U8 = laszip_U8(0)
     extended_return_number::laszip_U8 = laszip_U8(0)
-    extended_number_of_returns::laszip_U8 = laszip_U8(0)
+    # extended_number_of_returns::laszip_U8 = laszip_U8(0)
     dummy::NTuple{7, laszip_U8} = ntuple(i -> laszip_U8(0), 7)
     gps_time::laszip_F64 = laszip_F64(0.0)
     rgb::NTuple{4, laszip_U16} = ntuple(i -> laszip_U16(0), 4)
