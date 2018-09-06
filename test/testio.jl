@@ -8,7 +8,8 @@ lasio_testdir = joinpath(dirname(pathof(LasIO)), "..", "test")
 # source: http://www.liblas.org/samples/
 fname_las = "libLAS_1.2.las" # point format 0
 testfile_str = joinpath(lasio_testdir, fname_las)
-laz_out = joinpath(lasio_testdir, "out.laz")
+laz_out = joinpath(workdir, "out.laz")
+laz_stream_out = joinpath(workdir, "out-stream.laz")
 
 testfile = File{format"LAZ_"}(testfile_str)
 
@@ -94,3 +95,37 @@ LazIO.@check reader[] LazIO.laszip_destroy(reader[])
 LazIO.@check writer[] LazIO.laszip_destroy(writer[])
 
 rm(laz_out)
+
+function write(f::Function, path::AbstractString, ds::LazIO.LazDataset)
+    reader = ds.filehandle
+    # create writer
+    writer = Ref{Ptr{Cvoid}}(C_NULL)
+    LazIO.@check writer[] LazIO.laszip_create(writer)
+    # copy header from reader to writer (to be updated later)
+    LazIO.@check writer[] LazIO.laszip_set_header(writer[], Ref(ds.header))
+    # open writer
+    LazIO.@check writer[] LazIO.laszip_open_writer(writer[], path, Cint(1))
+    try
+        f(writer[])
+    finally
+        # update the header
+        LazIO.@check writer[] LazIO.laszip_update_inventory(writer[])
+        # close files and destroy pointers
+        LazIO.@check writer[] LazIO.laszip_close_writer(writer[])
+        LazIO.@check writer[] LazIO.laszip_destroy(writer[])
+    end
+end
+
+function writepoint(writer::Ptr{Cvoid}, p::LazIO.laszip_point)
+    # copy the point
+    LazIO.@check writer[] LazIO.laszip_set_point(writer, Ref(p))
+    # write it to the writer
+    LazIO.@check writer[] LazIO.laszip_write_point(writer)
+end
+
+write(laz_stream_out, ds) do io
+    @info laz_stream_out ds io first(ds)
+    for p in ds
+        writepoint(io, p)
+    end
+end
