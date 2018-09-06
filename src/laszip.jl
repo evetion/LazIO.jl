@@ -297,11 +297,11 @@ function laszip_create(pointer::Ref{laszip_POINTER})
 end
 
 function laszip_get_error(pointer::laszip_POINTER, error)
-    ccall((:laszip_get_error, laszip), laszip_I32, (laszip_POINTER, Ptr{Ptr{laszip_CHAR}}), pointer, error)
+    ccall((:laszip_get_error, laszip), laszip_I32, (laszip_POINTER, Ptr{Cstring}), pointer, error)
 end
 
 function laszip_get_warning(pointer::laszip_POINTER, warning)
-    ccall((:laszip_get_warning, laszip), laszip_I32, (laszip_POINTER, Ptr{Ptr{laszip_CHAR}}), pointer, warning)
+    ccall((:laszip_get_warning, laszip), laszip_I32, (laszip_POINTER, Ptr{Cstring}), pointer, warning)
 end
 
 function laszip_clean(pointer::laszip_POINTER)
@@ -324,9 +324,9 @@ function laszip_get_point_count(pointer::laszip_POINTER, count)
     ccall((:laszip_get_point_count, laszip), laszip_I32, (laszip_POINTER, Ptr{laszip_I64}), pointer, count)
 end
 
-# function laszip_set_header(pointer::laszip_POINTER, header)
-#     ccall((:laszip_set_header, laszip), laszip_I32, (laszip_POINTER, Ptr{laszip_header_struct}), pointer, header)
-# end
+function laszip_set_header(pointer::laszip_POINTER, header)
+    ccall((:laszip_set_header, laszip), laszip_I32, (laszip_POINTER, Ptr{laszip_header}), pointer, header)
+end
 
 # function laszip_set_point_type_and_size(pointer::laszip_POINTER, point_type::laszip_U8, point_size::laszip_U16)
 #     ccall((:laszip_set_point_type_and_size, laszip), laszip_I32, (laszip_POINTER, laszip_U8, laszip_U16), pointer, point_type, point_size)
@@ -340,9 +340,9 @@ end
 #     ccall((:laszip_auto_offset, laszip), laszip_I32, (laszip_POINTER,), pointer)
 # end
 
-# function laszip_set_point(pointer::laszip_POINTER, point)
-#     ccall((:laszip_set_point, laszip), laszip_I32, (laszip_POINTER, Ptr{laszip_point_struct}), pointer, point)
-# end
+function laszip_set_point(pointer::laszip_POINTER, point)
+    ccall((:laszip_set_point, laszip), laszip_I32, (laszip_POINTER, Ptr{laszip_point}), pointer, point)
+end
 
 # function laszip_set_coordinates(pointer::laszip_POINTER, coordinates)
 #     ccall((:laszip_set_coordinates, laszip), laszip_I32, (laszip_POINTER, Ptr{laszip_F64}), pointer, coordinates)
@@ -396,25 +396,25 @@ end
 #     ccall((:laszip_set_chunk_size, laszip), laszip_I32, (laszip_POINTER, laszip_U32), pointer, chunk_size)
 # end
 
-# function laszip_open_writer(pointer::laszip_POINTER, file_name, compress::laszip_BOOL)
-#     ccall((:laszip_open_writer, laszip), laszip_I32, (laszip_POINTER, Ptr{laszip_CHAR}, laszip_BOOL), pointer, file_name, compress)
-# end
+function laszip_open_writer(pointer::laszip_POINTER, file_name, compress::laszip_BOOL)
+    ccall((:laszip_open_writer, laszip), laszip_I32, (laszip_POINTER, Ptr{laszip_CHAR}, laszip_BOOL), pointer, file_name, compress)
+end
 
-# function laszip_write_point(pointer::laszip_POINTER)
-#     ccall((:laszip_write_point, laszip), laszip_I32, (laszip_POINTER,), pointer)
-# end
+function laszip_write_point(pointer::laszip_POINTER)
+    ccall((:laszip_write_point, laszip), laszip_I32, (laszip_POINTER,), pointer)
+end
 
 # function laszip_write_indexed_point(pointer::laszip_POINTER)
 #     ccall((:laszip_write_indexed_point, laszip), laszip_I32, (laszip_POINTER,), pointer)
 # end
 
-# function laszip_update_inventory(pointer::laszip_POINTER)
-#     ccall((:laszip_update_inventory, laszip), laszip_I32, (laszip_POINTER,), pointer)
-# end
+function laszip_update_inventory(pointer::laszip_POINTER)
+    ccall((:laszip_update_inventory, laszip), laszip_I32, (laszip_POINTER,), pointer)
+end
 
-# function laszip_close_writer(pointer::laszip_POINTER)
-#     ccall((:laszip_close_writer, laszip), laszip_I32, (laszip_POINTER,), pointer)
-# end
+function laszip_close_writer(pointer::laszip_POINTER)
+    ccall((:laszip_close_writer, laszip), laszip_I32, (laszip_POINTER,), pointer)
+end
 
 # function laszip_exploit_spatial_index(pointer::laszip_POINTER, exploit::laszip_BOOL)
 #     ccall((:laszip_exploit_spatial_index, laszip), laszip_I32, (laszip_POINTER, laszip_BOOL), pointer, exploit)

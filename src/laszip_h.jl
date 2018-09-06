@@ -98,8 +98,6 @@ const laszip_vlr_struct = Nothing
     user_data_after_header::Ptr{laszip_U8} = pointer("")
 end
 
-const laszip_header_struct = Nothing
-
 @with_kw mutable struct laszip_point
     X::laszip_I32 = laszip_I32(0)
     Y::laszip_I32 = laszip_I32(0)
@@ -150,5 +148,3 @@ const laszip_header_struct = Nothing
     num_extra_bytes::laszip_I32 = laszip_I32(0)
     extra_bytes::Ptr{laszip_U8} = pointer("")
 end
-
-const laszip_point_struct = Nothing
