@@ -108,8 +108,6 @@ function write(f::Function, path::AbstractString, ds::LazIO.LazDataset)
     try
         f(writer[])
     finally
-        # update the header
-        LazIO.@check writer[] LazIO.laszip_update_inventory(writer[])
         # close files and destroy pointers
         LazIO.@check writer[] LazIO.laszip_close_writer(writer[])
         LazIO.@check writer[] LazIO.laszip_destroy(writer[])
@@ -117,10 +115,9 @@ function write(f::Function, path::AbstractString, ds::LazIO.LazDataset)
 end
 
 function writepoint(writer::Ptr{Cvoid}, p::LazIO.laszip_point)
-    # copy the point
-    LazIO.@check writer[] LazIO.laszip_set_point(writer, Ref(p))
-    # write it to the writer
-    LazIO.@check writer[] LazIO.laszip_write_point(writer)
+    LazIO.@check writer LazIO.laszip_set_point(writer, Ref(p))
+    LazIO.@check writer LazIO.laszip_write_point(writer)
+    LazIO.@check writer LazIO.laszip_update_inventory(writer)
 end
 
 write(laz_stream_out, ds) do io
