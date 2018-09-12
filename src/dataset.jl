@@ -54,3 +54,9 @@ end
 
 Base.eltype(::LazDataset) = laszip_point
 Base.length(ds::LazDataset) = Int(ds.header.number_of_point_records)
+
+function Base.close(ds::LazDataset)
+    reader = ds.filehandle
+    LazIO.@check reader LazIO.laszip_close_reader(reader)
+    LazIO.@check reader LazIO.laszip_destroy(reader)
+end
