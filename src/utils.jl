@@ -1,4 +1,4 @@
-function laszip_error(laszip_obj::Ptr{Nothing})
+function laszip_error(laszip_obj::Ptr{Cvoid})
     errstr = Ref(Cstring(C_NULL))
     laszip_get_error(laszip_obj, errstr)
     if errstr[] != C_NULL

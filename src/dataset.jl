@@ -1,8 +1,8 @@
 struct LazDataset
     filename::String
     filehandle::Ptr{Cvoid}
-    header::laszip_header  # this enables iterating without unsafe_load everytime
-    point::Ptr{laszip_point}
+    header::LazHeader  # this enables iterating without unsafe_load everytime
+    point::Ptr{LazPoint}
 end
 
 function Base.show(io::IO, ds::LazDataset)
@@ -12,19 +12,19 @@ end
 
 function open(f::AbstractString)
     # Setup laszip reader
-    laszip_reader = Ref{Ptr{Nothing}}()
+    laszip_reader = Ref{Ptr{Cvoid}}()
     @check laszip_reader[] laszip_create(laszip_reader)
 
     # Open lasfile
     @check laszip_reader[] laszip_open_reader(laszip_reader[], f, Ref{Cint}(0))
 
     # Get a pointer to the header
-    header_ptr = Ref{Ptr{laszip_header}}()
+    header_ptr = Ref{Ptr{LazHeader}}()
     @check laszip_reader[] laszip_get_header_pointer(laszip_reader[], header_ptr)
     header = unsafe_load(header_ptr[])
 
     # Get a pointer to the points that will be read
-    point_ptr = Ref{Ptr{laszip_point}}()
+    point_ptr = Ref{Ptr{LazPoint}}()
     @check laszip_reader[] laszip_get_point_pointer(laszip_reader[], point_ptr)
 
     LazDataset(f, laszip_reader[], header, point_ptr[])
@@ -52,7 +52,7 @@ function Base.iterate(ds::LazDataset)
     end
 end
 
-Base.eltype(::LazDataset) = laszip_point
+Base.eltype(::LazDataset) = LazPoint
 Base.length(ds::LazDataset) = Int(ds.header.number_of_point_records)
 
 function Base.close(ds::LazDataset)

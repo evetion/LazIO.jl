@@ -16,7 +16,7 @@ function write(f::Function, path::AbstractString, ds::LazIO.LazDataset)
     end
 end
 
-function write(f::Function, path::AbstractString, header::LazIO.laszip_header)
+function write(f::Function, path::AbstractString, header::LazIO.LazHeader)
     # create writer
     writer = Ref{Ptr{Cvoid}}(C_NULL)
     LazIO.@check writer[] LazIO.laszip_create(writer)
@@ -33,7 +33,7 @@ function write(f::Function, path::AbstractString, header::LazIO.laszip_header)
     end
 end
 
-function writepoint(writer::Ptr{Cvoid}, p::LazIO.laszip_point)
+function writepoint(writer::Ptr{Cvoid}, p::LazIO.LazPoint)
     LazIO.@check writer LazIO.laszip_set_point(writer, Ref(p))
     LazIO.@check writer LazIO.laszip_write_point(writer)
     LazIO.@check writer LazIO.laszip_update_inventory(writer)
