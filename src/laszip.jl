@@ -61,7 +61,7 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function fread(__ptr, __size::Csize_t, __nitems::Csize_t, __stream)
-#     ccall((:fread, laszip), Csize_t, (Ptr{Nothing}, Csize_t, Csize_t, Ptr{FILE}), __ptr, __size, __nitems, __stream)
+#     ccall((:fread, laszip), Csize_t, (Ptr{Cvoid}, Csize_t, Csize_t, Ptr{FILE}), __ptr, __size, __nitems, __stream)
 # end
 
 # function freopen(arg1, arg2, arg3)
@@ -81,7 +81,7 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function fwrite(__ptr, __size::Csize_t, __nitems::Csize_t, __stream)
-#     ccall((:fwrite, laszip), Csize_t, (Ptr{Nothing}, Csize_t, Csize_t, Ptr{FILE}), __ptr, __size, __nitems, __stream)
+#     ccall((:fwrite, laszip), Csize_t, (Ptr{Cvoid}, Csize_t, Csize_t, Ptr{FILE}), __ptr, __size, __nitems, __stream)
 # end
 
 # function getc(arg1)
@@ -285,7 +285,7 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function funopen(arg1, arg2, arg3, arg4, arg5)
-#     ccall((:funopen, laszip), Ptr{FILE}, (Ptr{Nothing}, Ptr{Nothing}, Ptr{Nothing}, Ptr{Nothing}, Ptr{Nothing}), arg1, arg2, arg3, arg4, arg5)
+#     ccall((:funopen, laszip), Ptr{FILE}, (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}), arg1, arg2, arg3, arg4, arg5)
 # end
 
 function laszip_get_version(version_major, version_minor, version_revision, version_build)

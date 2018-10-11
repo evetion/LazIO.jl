@@ -5,7 +5,7 @@ loadheader(f::File{format"LAZ_"}) = loadheader(f.filename)
 
 function loadheader(f::String)
     # Setup laszip reader
-    laszip_reader = Ref{Ptr{Nothing}}()
+    laszip_reader = Ref{Ptr{Cvoid}}()
     @check laszip_reader[] laszip_create(laszip_reader)
 
     # Open lasfile
@@ -39,7 +39,7 @@ function load(f::String; range::Union{UnitRange{T}, Integer, Colon, Array{T, 1}}
     @info "LASzip DLL $(version_major[]) $(version_minor[]) $(version_revision[]) (build $(version_build[]))"
 
     # Setup laszip reader
-    laszip_reader = Ref{Ptr{Nothing}}()
+    laszip_reader = Ref{Ptr{Cvoid}}()
     @check laszip_reader[] laszip_create(laszip_reader)
 
     # Open lasfile

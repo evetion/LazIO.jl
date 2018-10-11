@@ -27,7 +27,7 @@ const laszip_I64 = Int64
 const laszip_CHAR = UInt8
 const laszip_F32 = Cfloat
 const laszip_F64 = Cdouble
-const laszip_POINTER = Ptr{Nothing}
+const laszip_POINTER = Ptr{Cvoid}
 
 @with_kw mutable struct laszip_geokey
     key_id::laszip_U16 = laszip_U16(0)

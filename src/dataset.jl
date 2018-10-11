@@ -12,7 +12,7 @@ end
 
 function open(f::AbstractString)
     # Setup laszip reader
-    laszip_reader = Ref{Ptr{Nothing}}()
+    laszip_reader = Ref{Ptr{Cvoid}}()
     @check laszip_reader[] laszip_create(laszip_reader)
 
     # Open lasfile
