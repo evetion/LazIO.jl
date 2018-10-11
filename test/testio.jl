@@ -35,7 +35,7 @@ end
 @testset "LazDataSet" begin
     ds = LazIO.open(testfile_str)
     @test ds isa LazIO.LazDataset
-    @test first(ds) isa LazIO.laszip_point
+    @test first(ds) isa LazIO.LazPoint
     @inferred first(ds)
     close(ds)
 end
@@ -51,7 +51,7 @@ end
     LazIO.@check writer[] LazIO.laszip_create(writer)
 
     # copy header from reader to writer (to be updated later)
-    header_ptr = Ref{Ptr{LazIO.laszip_header}}(C_NULL)
+    header_ptr = Ref{Ptr{LazIO.LazHeader}}(C_NULL)
     LazIO.@check header_ptr[] LazIO.laszip_get_header_pointer(reader[], header_ptr)
     LazIO.@check writer[] LazIO.laszip_set_header(writer[], header_ptr[])
 
@@ -59,7 +59,7 @@ end
     LazIO.@check writer[] LazIO.laszip_open_writer(writer[], laz_out, Cint(1))
 
     # read the first point
-    point_ptr = Ref{Ptr{LazIO.laszip_point}}(C_NULL)
+    point_ptr = Ref{Ptr{LazIO.LazPoint}}(C_NULL)
     LazIO.@check point_ptr[] LazIO.laszip_get_point_pointer(reader[], point_ptr)
     LazIO.@check reader[] LazIO.laszip_read_point(reader[])
 

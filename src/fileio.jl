@@ -14,7 +14,7 @@ function loadheader(f::String)
     is_compressed[] == 0 ? nothing : @info "File $f is compressed"
 
     # Get header
-    header_ptr = Ref{Ptr{laszip_header}}()
+    header_ptr = Ref{Ptr{LazHeader}}()
     @check laszip_reader[] laszip_get_header_pointer(laszip_reader[], header_ptr)
     header = LasHeader(unsafe_load(header_ptr[]))
 
@@ -48,12 +48,12 @@ function load(f::String; range::Union{UnitRange{T}, Integer, Colon, Array{T, 1}}
     is_compressed[] == 0 ? nothing : @info "File $f is compressed"
 
     # Get header
-    header_ptr = Ref{Ptr{laszip_header}}()
+    header_ptr = Ref{Ptr{LazHeader}}()
     @check laszip_reader[] laszip_get_header_pointer(laszip_reader[], header_ptr)
     header = LasHeader(unsafe_load(header_ptr[]))
 
     # Get a pointer to the points that will be read
-    point_ptr = Ref{Ptr{laszip_point}}()
+    point_ptr = Ref{Ptr{LazPoint}}()
     @check laszip_reader[] laszip_get_point_pointer(laszip_reader[], point_ptr)
 
     n = header.records_count

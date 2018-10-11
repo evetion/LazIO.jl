@@ -2,14 +2,14 @@
 
 using Parameters
 
-@with_kw mutable struct laszip_geokey
+@with_kw mutable struct LazGeoKey
     key_id::UInt16 = UInt16(0)
     tiff_tag_location::UInt16 = UInt16(0)
     count::UInt16 = UInt16(0)
     value_offset::UInt16 = UInt16(0)
 end
 
-@with_kw mutable struct laszip_vlr
+@with_kw mutable struct LazVLR
     reserved::UInt16 = UInt16(0)
     user_id::NTuple{16, UInt8} = ntuple(i -> UInt8(0x0), 16)
     record_id::UInt16 = UInt16(0)
@@ -18,7 +18,7 @@ end
     data::Ptr{UInt8} = pointer("")
 end
 
-@with_kw mutable struct laszip_header
+@with_kw mutable struct LazHeader
     file_source_ID::UInt16 = UInt16(0)
     global_encoding::UInt16 = UInt16(0)
     project_ID_GUID_data_1::UInt32 = UInt32(0)
@@ -67,7 +67,7 @@ end
     user_data_after_header::Ptr{UInt8} = pointer("")
 end
 
-@with_kw mutable struct laszip_point
+@with_kw mutable struct LazPoint
     X::Int32 = Int32(0)
     Y::Int32 = Int32(0)
     Z::Int32 = Int32(0)

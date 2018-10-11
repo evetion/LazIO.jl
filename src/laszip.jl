@@ -313,11 +313,11 @@ function laszip_destroy(pointer::Ptr{Cvoid})
 end
 
 function laszip_get_header_pointer(pointer::Ptr{Cvoid}, header_pointer)
-    ccall((:laszip_get_header_pointer, laszip), Int32, (Ptr{Cvoid}, Ref{Ptr{laszip_header}}), pointer, header_pointer)
+    ccall((:laszip_get_header_pointer, laszip), Int32, (Ptr{Cvoid}, Ref{Ptr{LazHeader}}), pointer, header_pointer)
 end
 
 function laszip_get_point_pointer(pointer::Ptr{Cvoid}, point_pointer)
-    ccall((:laszip_get_point_pointer, laszip), Int32, (Ptr{Cvoid}, Ref{Ptr{laszip_point}}), pointer, point_pointer)
+    ccall((:laszip_get_point_pointer, laszip), Int32, (Ptr{Cvoid}, Ref{Ptr{LazPoint}}), pointer, point_pointer)
 end
 
 function laszip_get_point_count(pointer::Ptr{Cvoid}, count)
@@ -325,7 +325,7 @@ function laszip_get_point_count(pointer::Ptr{Cvoid}, count)
 end
 
 function laszip_set_header(pointer::Ptr{Cvoid}, header)
-    ccall((:laszip_set_header, laszip), Int32, (Ptr{Cvoid}, Ptr{laszip_header}), pointer, header)
+    ccall((:laszip_set_header, laszip), Int32, (Ptr{Cvoid}, Ptr{LazHeader}), pointer, header)
 end
 
 # function laszip_set_point_type_and_size(pointer::Ptr{Cvoid}, point_type::UInt8, point_size::UInt16)
@@ -341,7 +341,7 @@ end
 # end
 
 function laszip_set_point(pointer::Ptr{Cvoid}, point)
-    ccall((:laszip_set_point, laszip), Int32, (Ptr{Cvoid}, Ptr{laszip_point}), pointer, point)
+    ccall((:laszip_set_point, laszip), Int32, (Ptr{Cvoid}, Ptr{LazPoint}), pointer, point)
 end
 
 # function laszip_set_coordinates(pointer::Ptr{Cvoid}, coordinates)
