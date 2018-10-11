@@ -1,7 +1,5 @@
 # Here be all conversions from Laszip C Types to LasIO types
 
-import Base.convert
-
 "Conversion to LasIO header"
 LasHeader(h::laszip_header) =
     LasIO.LasHeader(
@@ -41,7 +39,7 @@ LasHeader(h::laszip_header) =
     )
 
 "ASPRS LAS point data record format 0"
-convert(::Type{LasPoint0}, p::laszip_point) =
+Base.convert(::Type{LasPoint0}, p::laszip_point) =
     LasPoint0(
         p.X,
         p.Y,
@@ -55,7 +53,7 @@ convert(::Type{LasPoint0}, p::laszip_point) =
     )
 
 "ASPRS LAS point data record format 1"
-convert(::Type{LasPoint1}, p::laszip_point) =
+Base.convert(::Type{LasPoint1}, p::laszip_point) =
     LasPoint1(
         p.X,
         p.Y,
@@ -70,7 +68,7 @@ convert(::Type{LasPoint1}, p::laszip_point) =
     )
 
 "ASPRS LAS point data record format 2"
-convert(::Type{LasPoint2}, p::laszip_point) =
+Base.convert(::Type{LasPoint2}, p::laszip_point) =
     LasPoint2(
         p.X,
         p.Y,
@@ -87,7 +85,7 @@ convert(::Type{LasPoint2}, p::laszip_point) =
     )
 
 "ASPRS LAS point data record format 3"
-convert(::Type{LasPoint3}, p::laszip_point) =
+Base.convert(::Type{LasPoint3}, p::laszip_point) =
     LasPoint3(
         p.X,
         p.Y,
