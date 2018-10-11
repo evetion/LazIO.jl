@@ -9,8 +9,6 @@ using Parameters
     value_offset::UInt16 = UInt16(0)
 end
 
-const laszip_geokey_struct = Nothing
-
 @with_kw mutable struct laszip_vlr
     reserved::UInt16 = UInt16(0)
     user_id::NTuple{16, UInt8} = ntuple(i -> UInt8(0x0), 16)
@@ -19,8 +17,6 @@ const laszip_geokey_struct = Nothing
     description::NTuple{32, UInt8} = ntuple(i -> UInt8(0x0), 32)
     data::Ptr{UInt8} = pointer("")
 end
-
-const laszip_vlr_struct = Nothing
 
 @with_kw mutable struct laszip_header
     file_source_ID::UInt16 = UInt16(0)
@@ -66,7 +62,7 @@ const laszip_vlr_struct = Nothing
     # extended_number_of_points_by_return::Array{UInt64, 1} = Array{UInt64, 1}(zeros(0, 15))
     user_data_in_header_size::UInt32 = UInt32(0)
     user_data_in_header::Ptr{UInt8} = pointer("")
-    vlrs::Ptr{laszip_vlr_struct} = pointer("")
+    vlrs::Ptr{Cvoid} = pointer("")
     user_data_after_header_size::UInt32 = UInt32(0)
     user_data_after_header::Ptr{UInt8} = pointer("")
 end

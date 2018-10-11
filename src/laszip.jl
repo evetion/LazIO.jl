@@ -353,7 +353,7 @@ end
 # end
 
 # function laszip_set_geokeys(pointer::Ptr{Cvoid}, number::UInt32, key_entries)
-#     ccall((:laszip_set_geokeys, laszip), Int32, (Ptr{Cvoid}, UInt32, Ptr{laszip_geokey_struct}), pointer, number, key_entries)
+#     ccall((:laszip_set_geokeys, laszip), Int32, (Ptr{Cvoid}, UInt32, Ptr{Cvoid}), pointer, number, key_entries)
 # end
 
 # function laszip_set_geodouble_params(pointer::Ptr{Cvoid}, number::UInt32, geodouble_params)
