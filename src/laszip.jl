@@ -17,75 +17,75 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function clearerr(arg1)
-#     ccall((:clearerr, laszip), Nothing, (Ptr{FILE},), arg1)
+#     ccall((:clearerr, laszip), Nothing, (Ptr{Cvoid},), arg1)
 # end
 
 # function fclose(arg1)
-#     ccall((:fclose, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:fclose, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function feof(arg1)
-#     ccall((:feof, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:feof, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function ferror(arg1)
-#     ccall((:ferror, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:ferror, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function fflush(arg1)
-#     ccall((:fflush, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:fflush, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function fgetc(arg1)
-#     ccall((:fgetc, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:fgetc, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function fgetpos(arg1, arg2)
-#     ccall((:fgetpos, laszip), Cint, (Ptr{FILE}, Ptr{fpos_t}), arg1, arg2)
+#     ccall((:fgetpos, laszip), Cint, (Ptr{Cvoid}, Ptr{fpos_t}), arg1, arg2)
 # end
 
 # function fgets(arg1, arg2::Cint, arg3)
-#     ccall((:fgets, laszip), Cstring, (Cstring, Cint, Ptr{FILE}), arg1, arg2, arg3)
+#     ccall((:fgets, laszip), Cstring, (Cstring, Cint, Ptr{Cvoid}), arg1, arg2, arg3)
 # end
 
 # function fopen(__filename, __mode)
-#     ccall((:fopen, laszip), Ptr{FILE}, (Cstring, Cstring), __filename, __mode)
+#     ccall((:fopen, laszip), Ptr{Cvoid}, (Cstring, Cstring), __filename, __mode)
 # end
 
 # function fputc(arg1::Cint, arg2)
-#     ccall((:fputc, laszip), Cint, (Cint, Ptr{FILE}), arg1, arg2)
+#     ccall((:fputc, laszip), Cint, (Cint, Ptr{Cvoid}), arg1, arg2)
 # end
 
 # function fputs(arg1, arg2)
-#     ccall((:fputs, laszip), Cint, (Cstring, Ptr{FILE}), arg1, arg2)
+#     ccall((:fputs, laszip), Cint, (Cstring, Ptr{Cvoid}), arg1, arg2)
 # end
 
 # function fread(__ptr, __size::Csize_t, __nitems::Csize_t, __stream)
-#     ccall((:fread, laszip), Csize_t, (Ptr{Cvoid}, Csize_t, Csize_t, Ptr{FILE}), __ptr, __size, __nitems, __stream)
+#     ccall((:fread, laszip), Csize_t, (Ptr{Cvoid}, Csize_t, Csize_t, Ptr{Cvoid}), __ptr, __size, __nitems, __stream)
 # end
 
 # function freopen(arg1, arg2, arg3)
-#     ccall((:freopen, laszip), Ptr{FILE}, (Cstring, Cstring, Ptr{FILE}), arg1, arg2, arg3)
+#     ccall((:freopen, laszip), Ptr{Cvoid}, (Cstring, Cstring, Ptr{Cvoid}), arg1, arg2, arg3)
 # end
 
 # function fseek(arg1, arg2::Clong, arg3::Cint)
-#     ccall((:fseek, laszip), Cint, (Ptr{FILE}, Clong, Cint), arg1, arg2, arg3)
+#     ccall((:fseek, laszip), Cint, (Ptr{Cvoid}, Clong, Cint), arg1, arg2, arg3)
 # end
 
 # function fsetpos(arg1, arg2)
-#     ccall((:fsetpos, laszip), Cint, (Ptr{FILE}, Ptr{fpos_t}), arg1, arg2)
+#     ccall((:fsetpos, laszip), Cint, (Ptr{Cvoid}, Ptr{fpos_t}), arg1, arg2)
 # end
 
 # function ftell(arg1)
-#     ccall((:ftell, laszip), Clong, (Ptr{FILE},), arg1)
+#     ccall((:ftell, laszip), Clong, (Ptr{Cvoid},), arg1)
 # end
 
 # function fwrite(__ptr, __size::Csize_t, __nitems::Csize_t, __stream)
-#     ccall((:fwrite, laszip), Csize_t, (Ptr{Cvoid}, Csize_t, Csize_t, Ptr{FILE}), __ptr, __size, __nitems, __stream)
+#     ccall((:fwrite, laszip), Csize_t, (Ptr{Cvoid}, Csize_t, Csize_t, Ptr{Cvoid}), __ptr, __size, __nitems, __stream)
 # end
 
 # function getc(arg1)
-#     ccall((:getc, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:getc, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function getchar()
@@ -101,7 +101,7 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function putc(arg1::Cint, arg2)
-#     ccall((:putc, laszip), Cint, (Cint, Ptr{FILE}), arg1, arg2)
+#     ccall((:putc, laszip), Cint, (Cint, Ptr{Cvoid}), arg1, arg2)
 # end
 
 # function putchar(arg1::Cint)
@@ -121,19 +121,19 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function rewind(arg1)
-#     ccall((:rewind, laszip), Nothing, (Ptr{FILE},), arg1)
+#     ccall((:rewind, laszip), Nothing, (Ptr{Cvoid},), arg1)
 # end
 
 # function setbuf(arg1, arg2)
-#     ccall((:setbuf, laszip), Nothing, (Ptr{FILE}, Cstring), arg1, arg2)
+#     ccall((:setbuf, laszip), Nothing, (Ptr{Cvoid}, Cstring), arg1, arg2)
 # end
 
 # function setvbuf(arg1, arg2, arg3::Cint, arg4::Csize_t)
-#     ccall((:setvbuf, laszip), Cint, (Ptr{FILE}, Cstring, Cint, Csize_t), arg1, arg2, arg3, arg4)
+#     ccall((:setvbuf, laszip), Cint, (Ptr{Cvoid}, Cstring, Cint, Csize_t), arg1, arg2, arg3, arg4)
 # end
 
 # function tmpfile()
-#     ccall((:tmpfile, laszip), Ptr{FILE}, ())
+#     ccall((:tmpfile, laszip), Ptr{Cvoid}, ())
 # end
 
 # function tmpnam(arg1)
@@ -141,11 +141,11 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function ungetc(arg1::Cint, arg2)
-#     ccall((:ungetc, laszip), Cint, (Cint, Ptr{FILE}), arg1, arg2)
+#     ccall((:ungetc, laszip), Cint, (Cint, Ptr{Cvoid}), arg1, arg2)
 # end
 
 # function vfprintf(arg1, arg2, arg3::va_list)
-#     ccall((:vfprintf, laszip), Cint, (Ptr{FILE}, Cstring, va_list), arg1, arg2, arg3)
+#     ccall((:vfprintf, laszip), Cint, (Ptr{Cvoid}, Cstring, va_list), arg1, arg2, arg3)
 # end
 
 # function vprintf(arg1, arg2)
@@ -161,35 +161,35 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function fdopen(arg1::Cint, arg2)
-#     ccall((:fdopen, laszip), Ptr{FILE}, (Cint, Cstring), arg1, arg2)
+#     ccall((:fdopen, laszip), Ptr{Cvoid}, (Cint, Cstring), arg1, arg2)
 # end
 
 # function fileno(arg1)
-#     ccall((:fileno, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:fileno, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function pclose(arg1)
-#     ccall((:pclose, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:pclose, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function popen(arg1, arg2)
-#     ccall((:popen, laszip), Ptr{FILE}, (Cstring, Cstring), arg1, arg2)
+#     ccall((:popen, laszip), Ptr{Cvoid}, (Cstring, Cstring), arg1, arg2)
 # end
 
 # function flockfile(arg1)
-#     ccall((:flockfile, laszip), Nothing, (Ptr{FILE},), arg1)
+#     ccall((:flockfile, laszip), Nothing, (Ptr{Cvoid},), arg1)
 # end
 
 # function ftrylockfile(arg1)
-#     ccall((:ftrylockfile, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:ftrylockfile, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function funlockfile(arg1)
-#     ccall((:funlockfile, laszip), Nothing, (Ptr{FILE},), arg1)
+#     ccall((:funlockfile, laszip), Nothing, (Ptr{Cvoid},), arg1)
 # end
 
 # function getc_unlocked(arg1)
-#     ccall((:getc_unlocked, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:getc_unlocked, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function getchar_unlocked()
@@ -197,7 +197,7 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function putc_unlocked(arg1::Cint, arg2)
-#     ccall((:putc_unlocked, laszip), Cint, (Cint, Ptr{FILE}), arg1, arg2)
+#     ccall((:putc_unlocked, laszip), Cint, (Cint, Ptr{Cvoid}), arg1, arg2)
 # end
 
 # function putchar_unlocked(arg1::Cint)
@@ -205,11 +205,11 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function getw(arg1)
-#     ccall((:getw, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:getw, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function putw(arg1::Cint, arg2)
-#     ccall((:putw, laszip), Cint, (Cint, Ptr{FILE}), arg1, arg2)
+#     ccall((:putw, laszip), Cint, (Cint, Ptr{Cvoid}), arg1, arg2)
 # end
 
 # function tempnam(__dir, __prefix)
@@ -217,15 +217,15 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function fseeko(__stream, __offset::off_t, __whence::Cint)
-#     ccall((:fseeko, laszip), Cint, (Ptr{FILE}, off_t, Cint), __stream, __offset, __whence)
+#     ccall((:fseeko, laszip), Cint, (Ptr{Cvoid}, off_t, Cint), __stream, __offset, __whence)
 # end
 
 # function ftello(__stream)
-#     ccall((:ftello, laszip), off_t, (Ptr{FILE},), __stream)
+#     ccall((:ftello, laszip), off_t, (Ptr{Cvoid},), __stream)
 # end
 
 # function vfscanf(__stream, __format, arg1)
-#     ccall((:vfscanf, laszip), Cint, (Ptr{FILE}, Cstring, Ptr{__va_list_tag}), __stream, __format, arg1)
+#     ccall((:vfscanf, laszip), Cint, (Ptr{Cvoid}, Cstring, Ptr{__va_list_tag}), __stream, __format, arg1)
 # end
 
 # function vscanf(__format, arg1)
@@ -245,11 +245,11 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function getdelim(__linep, __linecapp, __delimiter::Cint, __stream)
-#     ccall((:getdelim, laszip), ssize_t, (Ptr{Cstring}, Ptr{Csize_t}, Cint, Ptr{FILE}), __linep, __linecapp, __delimiter, __stream)
+#     ccall((:getdelim, laszip), ssize_t, (Ptr{Cstring}, Ptr{Csize_t}, Cint, Ptr{Cvoid}), __linep, __linecapp, __delimiter, __stream)
 # end
 
 # function getline(__linep, __linecapp, __stream)
-#     ccall((:getline, laszip), ssize_t, (Ptr{Cstring}, Ptr{Csize_t}, Ptr{FILE}), __linep, __linecapp, __stream)
+#     ccall((:getline, laszip), ssize_t, (Ptr{Cstring}, Ptr{Csize_t}, Ptr{Cvoid}), __linep, __linecapp, __stream)
 # end
 
 # function ctermid_r(arg1)
@@ -257,7 +257,7 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function fgetln(arg1, arg2)
-#     ccall((:fgetln, laszip), Cstring, (Ptr{FILE}, Ptr{Csize_t}), arg1, arg2)
+#     ccall((:fgetln, laszip), Cstring, (Ptr{Cvoid}, Ptr{Csize_t}), arg1, arg2)
 # end
 
 # function fmtcheck(arg1, arg2)
@@ -265,15 +265,15 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function fpurge(arg1)
-#     ccall((:fpurge, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:fpurge, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function setbuffer(arg1, arg2, arg3::Cint)
-#     ccall((:setbuffer, laszip), Nothing, (Ptr{FILE}, Cstring, Cint), arg1, arg2, arg3)
+#     ccall((:setbuffer, laszip), Nothing, (Ptr{Cvoid}, Cstring, Cint), arg1, arg2, arg3)
 # end
 
 # function setlinebuf(arg1)
-#     ccall((:setlinebuf, laszip), Cint, (Ptr{FILE},), arg1)
+#     ccall((:setlinebuf, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
 # function vasprintf(arg1, arg2, arg3::va_list)
@@ -281,11 +281,11 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function zopen(arg1, arg2, arg3::Cint)
-#     ccall((:zopen, laszip), Ptr{FILE}, (Cstring, Cstring, Cint), arg1, arg2, arg3)
+#     ccall((:zopen, laszip), Ptr{Cvoid}, (Cstring, Cstring, Cint), arg1, arg2, arg3)
 # end
 
 # function funopen(arg1, arg2, arg3, arg4, arg5)
-#     ccall((:funopen, laszip), Ptr{FILE}, (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}), arg1, arg2, arg3, arg4, arg5)
+#     ccall((:funopen, laszip), Ptr{Cvoid}, (Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}, Ptr{Cvoid}), arg1, arg2, arg3, arg4, arg5)
 # end
 
 function laszip_get_version(version_major, version_minor, version_revision, version_build)
