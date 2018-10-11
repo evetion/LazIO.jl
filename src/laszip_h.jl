@@ -3,18 +3,6 @@
 using Compat
 using Parameters
 
-const __darwin_va_list = Cstring
-const __darwin_off_t = Int64
-const __darwin_size_t = Culong
-const __darwin_ssize_t = Clong
-const __darwin_intptr_t = Clong
-const size_t = __darwin_size_t
-const fpos_t = __darwin_off_t
-const FILE = Nothing
-const va_list = __darwin_va_list
-const off_t = __darwin_off_t
-const ssize_t = __darwin_ssize_t
-
 @with_kw mutable struct laszip_geokey
     key_id::UInt16 = UInt16(0)
     tiff_tag_location::UInt16 = UInt16(0)

@@ -41,7 +41,7 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function fgetpos(arg1, arg2)
-#     ccall((:fgetpos, laszip), Cint, (Ptr{Cvoid}, Ptr{fpos_t}), arg1, arg2)
+#     ccall((:fgetpos, laszip), Cint, (Ptr{Cvoid}, Ptr{Int64}), arg1, arg2)
 # end
 
 # function fgets(arg1, arg2::Cint, arg3)
@@ -73,7 +73,7 @@ const laszip = replace(liblaszip, "_api" => "")
 # end
 
 # function fsetpos(arg1, arg2)
-#     ccall((:fsetpos, laszip), Cint, (Ptr{Cvoid}, Ptr{fpos_t}), arg1, arg2)
+#     ccall((:fsetpos, laszip), Cint, (Ptr{Cvoid}, Ptr{Int64}), arg1, arg2)
 # end
 
 # function ftell(arg1)
@@ -144,8 +144,8 @@ const laszip = replace(liblaszip, "_api" => "")
 #     ccall((:ungetc, laszip), Cint, (Cint, Ptr{Cvoid}), arg1, arg2)
 # end
 
-# function vfprintf(arg1, arg2, arg3::va_list)
-#     ccall((:vfprintf, laszip), Cint, (Ptr{Cvoid}, Cstring, va_list), arg1, arg2, arg3)
+# function vfprintf(arg1, arg2, arg3::Cstring)
+#     ccall((:vfprintf, laszip), Cint, (Ptr{Cvoid}, Cstring, Cstring), arg1, arg2, arg3)
 # end
 
 # function vprintf(arg1, arg2)
@@ -216,12 +216,12 @@ const laszip = replace(liblaszip, "_api" => "")
 #     ccall((:tempnam, laszip), Cstring, (Cstring, Cstring), __dir, __prefix)
 # end
 
-# function fseeko(__stream, __offset::off_t, __whence::Cint)
-#     ccall((:fseeko, laszip), Cint, (Ptr{Cvoid}, off_t, Cint), __stream, __offset, __whence)
+# function fseeko(__stream, __offset::Int64, __whence::Cint)
+#     ccall((:fseeko, laszip), Cint, (Ptr{Cvoid}, Int64, Cint), __stream, __offset, __whence)
 # end
 
 # function ftello(__stream)
-#     ccall((:ftello, laszip), off_t, (Ptr{Cvoid},), __stream)
+#     ccall((:ftello, laszip), Int64, (Ptr{Cvoid},), __stream)
 # end
 
 # function vfscanf(__stream, __format, arg1)
@@ -240,16 +240,16 @@ const laszip = replace(liblaszip, "_api" => "")
 #     ccall((:vsscanf, laszip), Cint, (Cstring, Cstring, Ptr{__va_list_tag}), __str, __format, arg1)
 # end
 
-# function vdprintf(arg1::Cint, arg2, arg3::va_list)
-#     ccall((:vdprintf, laszip), Cint, (Cint, Cstring, va_list), arg1, arg2, arg3)
+# function vdprintf(arg1::Cint, arg2, arg3::Cstring)
+#     ccall((:vdprintf, laszip), Cint, (Cint, Cstring, Cstring), arg1, arg2, arg3)
 # end
 
 # function getdelim(__linep, __linecapp, __delimiter::Cint, __stream)
-#     ccall((:getdelim, laszip), ssize_t, (Ptr{Cstring}, Ptr{Csize_t}, Cint, Ptr{Cvoid}), __linep, __linecapp, __delimiter, __stream)
+#     ccall((:getdelim, laszip), Int32, (Ptr{Cstring}, Ptr{Csize_t}, Cint, Ptr{Cvoid}), __linep, __linecapp, __delimiter, __stream)
 # end
 
 # function getline(__linep, __linecapp, __stream)
-#     ccall((:getline, laszip), ssize_t, (Ptr{Cstring}, Ptr{Csize_t}, Ptr{Cvoid}), __linep, __linecapp, __stream)
+#     ccall((:getline, laszip), Int32, (Ptr{Cstring}, Ptr{Csize_t}, Ptr{Cvoid}), __linep, __linecapp, __stream)
 # end
 
 # function ctermid_r(arg1)
@@ -276,8 +276,8 @@ const laszip = replace(liblaszip, "_api" => "")
 #     ccall((:setlinebuf, laszip), Cint, (Ptr{Cvoid},), arg1)
 # end
 
-# function vasprintf(arg1, arg2, arg3::va_list)
-#     ccall((:vasprintf, laszip), Cint, (Ptr{Cstring}, Cstring, va_list), arg1, arg2, arg3)
+# function vasprintf(arg1, arg2, arg3::Cstring)
+#     ccall((:vasprintf, laszip), Cint, (Ptr{Cstring}, Cstring, Cstring), arg1, arg2, arg3)
 # end
 
 # function zopen(arg1, arg2, arg3::Cint)
