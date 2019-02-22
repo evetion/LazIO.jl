@@ -4,9 +4,9 @@
 
 
 # LazIO
-Extends LasIO with Laszip integration.
+Extends LasIO with LASzip integration.
 
-Uses the [LASzip](https://github.com/LASzip/LASzip/) shared library to read compressed las files (*.laz) into the uncompressed format that [LasIO](https://github.com/visr/LasIO.jl) reads natively.
+Uses the [LASzip](https://github.com/LASzip/LASzip/) shared library to read compressed las files (\*.laz) into the uncompressed format that [LasIO](https://github.com/visr/LasIO.jl) reads natively.
 
 ```julia
 using LazIO
@@ -40,5 +40,3 @@ end
 sum ./ ds.header.number_of_point_records
 (3497.988658107152, 3741.789882541163, -164.49942114741447)
 ```
-
-For the moment this wrapper only supports reading.
