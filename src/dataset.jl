@@ -6,7 +6,7 @@ struct LazDataset
 end
 
 function Base.show(io::IO, ds::LazDataset)
-    n = ds.header.number_of_point_records
+    n = max(ds.header.number_of_point_records, ds.header.extended_number_of_point_records)
     println(io, "LazDataset of $(ds.filename) with $n points.")
 end
 
@@ -53,4 +53,4 @@ function Base.iterate(ds::LazDataset)
 end
 
 Base.eltype(::LazDataset) = laszip_point
-Base.length(ds::LazDataset) = Int(ds.header.number_of_point_records)
+Base.length(ds::LazDataset) = Int(max(ds.header.number_of_point_records, ds.header.extended_number_of_point_records))
