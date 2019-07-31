@@ -117,3 +117,8 @@ end
     num_extra_bytes::Int32 = Int32(0)
     extra_bytes::Ptr{UInt8} = pointer("")
 end
+
+return_number(p::LazIO.LazPoint) = (p.return_number & 0b00000111)
+number_of_returns(p::LazIO.LazPoint) = (p.return_number & 0b00111000) >> 3
+scan_direction(p::LazIO.LazPoint) = Bool((p.return_number & 0b01000000) >> 6)
+edge_of_flight_line(p::LazIO.LazPoint) = Bool((p.return_number & 0b10000000) >> 7)
