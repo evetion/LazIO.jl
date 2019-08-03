@@ -1,5 +1,0 @@
-julia 0.7
-FileIO
-Parameters
-LasIO 0.2.0
-BinaryProvider
