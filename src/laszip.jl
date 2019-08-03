@@ -439,6 +439,7 @@ end
 function laszip_seek_point(pointer::Ptr{Cvoid}, index::Int64)
     ccall((:laszip_seek_point, laszip), Int32, (Ptr{Cvoid}, Int64), pointer, index)
 end
+laszip_seek_point(pointer::Ptr{Cvoid}, index::Int32) = laszip_seek_point(pointer, convert(Int64, index))
 
 function laszip_read_point(pointer::Ptr{Cvoid})
     ccall((:laszip_read_point, laszip), Int32, (Ptr{Cvoid},), pointer)
