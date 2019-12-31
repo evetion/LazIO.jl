@@ -9,7 +9,7 @@ Extends LasIO with LASzip integration.
 Uses the [LASzip](https://github.com/LASzip/LASzip/) shared library to read compressed las files (\*.laz) into the uncompressed format that [LasIO](https://github.com/visr/LasIO.jl) reads natively.
 
 ```julia
-using LazIO
+julia> using LazIO
 
 # Load header and all points
 julia> LazIO.load("test/libLAS_1.2.laz")
