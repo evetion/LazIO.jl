@@ -26,5 +26,6 @@ include("fileio.jl")
 include("convert.jl")
 include("dataset.jl")
 include("write.jl")
+include("table.jl")
 
 end # module

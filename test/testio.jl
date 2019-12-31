@@ -2,6 +2,7 @@ using FileIO
 using LazIO
 using LasIO
 using Test
+using Tables
 
 workdir = @__DIR__
 lasio_testdir = joinpath(dirname(pathof(LasIO)), "..", "test")
@@ -37,6 +38,15 @@ end
     @test ds isa LazIO.LazDataset
     @test first(ds) isa LazIO.LazPoint
     @inferred first(ds)
+    close(ds)
+end
+
+@testset "Tables" begin
+    ds = LazIO.open(testfile_str)
+    @test Tables.istable(LazIO.LazDataset)
+    @test Tables.rowaccess(LazIO.LazDataset)
+    @test first(ds) isa LazIO.LazPoint
+    @inferred first(Tables.rows(ds))
     close(ds)
 end
 

@@ -12,31 +12,38 @@ Uses the [LASzip](https://github.com/LASzip/LASzip/) shared library to read comp
 using LazIO
 
 # Load header and all points
-LazIO.load("test/libLAS_1.2.laz")
-INFO: LASzip DLL 3 1 0 (build 170823)
-INFO: File test/libLAS_1.2.laz is compressed
-INFO: Reading 497536 point(s).
+julia> LazIO.load("test/libLAS_1.2.laz")
 (LasHeader with 497536 points.
 , Vector{LasIO.LasPoint0} with 497536 points.
 )
 
 # Load header and range of points
-h, p = LazIO.load("test/libLAS_1.2.laz", range=2:10)
-INFO: LASzip DLL 3 1 0 (build 170823)
-INFO: File test/libLAS_1.2.laz is compressed
-INFO: Reading 9 point(s).
-INFO: Seeking to point 2
+julia> h, p = LazIO.load("test/libLAS_1.2.laz", range=2:10)
 (LasHeader with 497536 points.
 , Vector{LasIO.LasPoint0} with 9 points.
 )
 
 # Open file and iterate over points (streaming)
-ds = LazIO.open("test/libLAS_1.2.laz")
+julia> ds = LazIO.open("test/libLAS_1.2.laz")
 LazDataset of test/libLAS_1.2.laz with 497536 points.
-sum = map(Int32, (0,0,0))  # Int32, not yet scaled and offset
-for p in ds
-    global sum = sum .+ (p.X, p.Y, p.Z)
-end
-sum ./ ds.header.number_of_point_records
+
+julia> sum = map(Int32, (0,0,0))  # Int32, not yet scaled and offset
+julia> for p in ds
+           global sum = sum .+ (p.X, p.Y, p.Z)
+       end
+julia> sum ./ ds.header.number_of_point_records
 (3497.988658107152, 3741.789882541163, -164.49942114741447)
+
+# Or use the tables interface
+julia> using DataFrames
+julia> DataFrame(ds)
+497536×19 DataFrame. Omitted printing of 12 columns
+│ Row    │ X         │ Y        │ Z     │ intensity │ return_number
+│        │ Int32     │ Int32    │ Int32 │ UInt16    │ UInt8
+├────────┼───────────┼──────────┼───────┼───────────┼──────────────
+│ 1      │ 144013394 │ 37500023 │ 84666 │ 0x00fa    │ 0x00
+│ 2      │ 144012426 │ 37500049 │ 84655 │ 0x00f5    │ 0x00
+│ 3      │ 144011447 │ 37500077 │ 84644 │ 0x00ef    │ 0x00
+│ 4      │ 144010469 │ 37500104 │ 84632 │ 0x00fb    │ 0x00
+⋮
 ```

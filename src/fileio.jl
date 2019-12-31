@@ -11,7 +11,7 @@ function loadheader(f::String)
     # Open lasfile
     is_compressed = Ref{Cint}(0)
     @check laszip_reader[] laszip_open_reader(laszip_reader[], f, is_compressed)
-    is_compressed[] == 0 ? nothing : @info "File $f is compressed"
+    is_compressed[] == 0 ? nothing : @debug "File $f is compressed"
 
     # Get header
     header_ptr = Ref{Ptr{LazHeader}}()
@@ -36,7 +36,7 @@ function load(f::String; range::Union{UnitRange{T}, Integer, Colon, Array{T, 1}}
     pto = unsafe_pointer_to_objref
 
     laszip_get_version(version_major, version_minor, version_revision, version_build)
-    @info "LASzip DLL $(version_major[]) $(version_minor[]) $(version_revision[]) (build $(version_build[]))"
+    @debug "LASzip DLL $(version_major[]) $(version_minor[]) $(version_revision[]) (build $(version_build[]))"
 
     # Setup laszip reader
     laszip_reader = Ref{Ptr{Cvoid}}()
@@ -45,7 +45,7 @@ function load(f::String; range::Union{UnitRange{T}, Integer, Colon, Array{T, 1}}
     # Open lasfile
     is_compressed = Ref{Cint}(0)
     @check laszip_reader[] laszip_open_reader(laszip_reader[], f, is_compressed)
-    is_compressed[] == 0 ? nothing : @info "File $f is compressed"
+    is_compressed[] == 0 ? nothing : @debug "File $f is compressed"
 
     # Get header
     header_ptr = Ref{Ptr{LazHeader}}()
@@ -63,12 +63,12 @@ function load(f::String; range::Union{UnitRange{T}, Integer, Colon, Array{T, 1}}
 
     pointerindex = 0  # index for point pointer
 
-    @info "Reading $(length(r)) point(s)."
+    @debug "Reading $(length(r)) point(s)."
     for (i, ii) in enumerate(r)
         # Requested point not at current pointer
         if ii-1 != pointerindex
             # Seek it and set pointer
-            @info "Seeking to point $ii"
+            @debug "Seeking to point $ii"
             laszip_seek_point(laszip_reader[], Int64(ii-1))
             pointerindex = ii-1
         end
