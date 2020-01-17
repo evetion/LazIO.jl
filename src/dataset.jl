@@ -60,3 +60,8 @@ function Base.close(ds::LazDataset)
     LazIO.@check reader LazIO.laszip_close_reader(reader)
     LazIO.@check reader LazIO.laszip_destroy(reader)
 end
+
+function LasIO.boundingbox(h::LazHeader)
+    (xmin = h.min_x, ymin = h.min_y, zmin = h.min_z, xmax = h.max_x, ymax = h.max_y, zmax = h.max_z)
+end
+LasIO.boundingbox(ds::LazDataset) = boundingbox(ds.header)

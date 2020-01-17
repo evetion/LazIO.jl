@@ -13,7 +13,7 @@ laz_out = joinpath(workdir, "out.laz")
 testfile = File{format"LAZ_"}(testfile_str)
 
 header, pointdata_all = load(testfile)
-@testset "header" begin
+@testset "Header" begin
     @test header.version_major == 1
     @test header.version_minor == 2
     @test header.data_format_id == 0
@@ -21,9 +21,10 @@ header, pointdata_all = load(testfile)
     @test header.x_scale == 0.01
     @test header.y_max == 379999.99
     @test header.header_size == 227
+    @test LazIO.boundingbox(header) == (xmin = 1.44e6, ymin = 375000.03, zmin = 832.1800000000001, xmax = 1.44499996e6, ymax = 379999.99, zmax = 972.6700000000001)
 end
 
-@testset "ranges" begin
+@testset "Range indexing" begin
     _, pointdata_276 = load(testfile, range=276)
     _, pointdata_array = load(testfile, range=[1,276,277,497536])
     _, pointdata_colon = load(testfile, range=:)
@@ -38,10 +39,11 @@ end
     @test ds isa LazIO.LazDataset
     @test first(ds) isa LazIO.LazPoint
     @inferred first(ds)
+    @test LazIO.boundingbox(ds) == (xmin = 1.44e6, ymin = 375000.03, zmin = 832.1800000000001, xmax = 1.44499996e6, ymax = 379999.99, zmax = 972.6700000000001)
     close(ds)
 end
 
-@testset "Tables" begin
+@testset "Table interface" begin
     ds = LazIO.open(testfile_str)
     @test Tables.istable(LazIO.LazDataset)
     @test Tables.rowaccess(LazIO.LazDataset)
@@ -50,7 +52,7 @@ end
     close(ds)
 end
 
-@testset "read, modify then write a single point to a new LAZ" begin
+@testset "Writing" begin
     # open reader
     reader = Ref{Ptr{Cvoid}}(C_NULL)
     LazIO.@check reader[] LazIO.laszip_create(reader)
@@ -106,7 +108,7 @@ end
     rm(laz_out)
 end
 
-@testset "stream LazDataSet to LAZ" begin
+@testset "Stream output (dataset)" begin
     ds = LazIO.open(testfile_str)
     laz_stream_out = joinpath(workdir, "out-stream.laz")
 
@@ -134,7 +136,7 @@ end
     rm(laz_stream_out)
 end
 
-@testset "stream to LAZ" begin
+@testset "Stream output (header)" begin
     ds = LazIO.open(testfile_str)
     laz_stream_out = joinpath(workdir, "out-stream2.laz")
 
