@@ -79,9 +79,9 @@ Base.convert(::Type{LasPoint2}, p::LazPoint) =
         p.scan_angle_rank,
         p.user_data,
         p.point_source_ID,
-        p.rgb[1],
-        p.rgb[2],
-        p.rgb[3]
+        reinterpret(N0f16, p.rgb[1]),
+        reinterpret(N0f16, p.rgb[2]),
+        reinterpret(N0f16, p.rgb[3])
     )
 
 "ASPRS LAS point data record format 3"
@@ -97,7 +97,7 @@ Base.convert(::Type{LasPoint3}, p::LazPoint) =
         p.user_data,
         p.point_source_ID,
         p.gps_time,
-        p.rgb[1],
-        p.rgb[2],
-        p.rgb[3]
+        reinterpret(N0f16, p.rgb[1]),
+        reinterpret(N0f16, p.rgb[2]),
+        reinterpret(N0f16, p.rgb[3])
     )
