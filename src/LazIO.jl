@@ -3,6 +3,7 @@ module LazIO
 using Libdl
 using FileIO
 using LasIO
+using FixedPointNumbers
 
 # Load in `deps.jl`, complaining if it does not exist
 const depsjl_path = joinpath(dirname(@__FILE__), "..", "deps", "deps.jl")
