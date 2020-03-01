@@ -22,6 +22,7 @@ header, pointdata_all = load(testfile)
     @test header.y_max == 379999.99
     @test header.header_size == 227
     @test LazIO.boundingbox(header) == (xmin = 1.44e6, ymin = 375000.03, zmin = 832.1800000000001, xmax = 1.44499996e6, ymax = 379999.99, zmax = 972.6700000000001)
+    @test LazIO.loadheader(testfile) isa LasIO.LasHeader
 end
 
 @testset "Range indexing" begin
@@ -40,6 +41,10 @@ end
     @test first(ds) isa LazIO.LazPoint
     @inferred first(ds)
     @test LazIO.boundingbox(ds) == (xmin = 1.44e6, ymin = 375000.03, zmin = 832.1800000000001, xmax = 1.44499996e6, ymax = 379999.99, zmax = 972.6700000000001)
+    @test LazIO.return_number(first(ds)) == 0x00
+    @test LazIO.number_of_returns(first(ds)) == 0x00
+    @test LazIO.scan_direction(first(ds)) == false
+    @test LazIO.edge_of_flight_line(first(ds)) == false
     close(ds)
 end
 
