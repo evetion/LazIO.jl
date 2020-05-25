@@ -1,7 +1,7 @@
 name = "LazIO"
 uuid = "c3605908-9f0f-11e8-0a72-0d361c15a277"
 authors = ["Maarten Pronk <git@evetion.nl>"]
-version = "0.1.5"
+version = "0.2.0"
 
 [deps]
 FileIO = "5789e2e9-d7fb-5bc7-8068-2c6fae9b9549"
