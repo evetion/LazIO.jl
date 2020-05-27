@@ -132,7 +132,7 @@ number_of_returns(p::LazIO.LazPoint) = (p.return_number & 0b00111000) >> 3
 scan_direction(p::LazIO.LazPoint) = Bool((p.return_number & 0b01000000) >> 6)
 edge_of_flight_line(p::LazIO.LazPoint) = Bool((p.return_number & 0b10000000) >> 7)
 
-classification(p::LasPoint) = (p.classification & 0b00011111)
-synthetic(p::LasPoint) = Bool((p.classification & 0b00100000) >> 5)
-key_point(p::LasPoint) = Bool((p.classification & 0b01000000) >> 6)
-withheld(p::LasPoint) = Bool((p.classification & 0b10000000) >> 7)
+classification(p::LazIO.LazPoint) = (p.classification & 0b00011111)
+synthetic(p::LazIO.LazPoint) = Bool((p.classification & 0b00100000) >> 5)
+key_point(p::LazIO.LazPoint) = Bool((p.classification & 0b01000000) >> 6)
+withheld(p::LazIO.LazPoint) = Bool((p.classification & 0b10000000) >> 7)

@@ -46,10 +46,10 @@ using LazIO
         extended_classification = UInt8(255),
         extended_return_number = UInt8(25),
         # extended_number_of_returns = UInt8(0),
-        dummy = ntuple(i -> UInt8(255), 7),
+        dummy = ntuple(i->UInt8(255), 7),
         gps_time = Float64(8791823.25),
-        rgb = ntuple(i -> UInt16(65535), 4),
-        wave_packet = ntuple(i -> UInt8(255), 29),
+        rgb = ntuple(i->UInt16(65535), 4),
+        wave_packet = ntuple(i->UInt8(255), 29),
         num_extra_bytes = Int32(24244),
         extra_bytes = pointer("")
     )
@@ -65,4 +65,5 @@ using LazIO
     las1 = convert(LazIO.LasPoint1, lazp)
     las2 = convert(LazIO.LasPoint2, lazp)
     las3 = convert(LazIO.LasPoint3, lazp)
+
 end

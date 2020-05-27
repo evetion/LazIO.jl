@@ -21,4 +21,14 @@ include("dataset.jl")
 include("write.jl")
 include("table.jl")
 
+export return_number
+export number_of_returns
+export scan_direction
+export edge_of_flight_line
+export classification
+export synthetic
+export key_point
+export withheld
+
+
 end # module
