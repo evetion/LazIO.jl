@@ -127,12 +127,12 @@ end
     extra_bytes::Ptr{UInt8} = pointer("")
 end
 
-return_number(p::LazIO.LazPoint) = (p.return_number & 0b00000111)
-number_of_returns(p::LazIO.LazPoint) = (p.return_number & 0b00111000) >> 3
-scan_direction(p::LazIO.LazPoint) = Bool((p.return_number & 0b01000000) >> 6)
-edge_of_flight_line(p::LazIO.LazPoint) = Bool((p.return_number & 0b10000000) >> 7)
+LasIO.return_number(p::LazIO.LazPoint) = (p.return_number & 0b00000111)
+LasIO.number_of_returns(p::LazIO.LazPoint) = (p.return_number & 0b00111000) >> 3
+LasIO.scan_direction(p::LazIO.LazPoint) = Bool((p.return_number & 0b01000000) >> 6)
+LasIO.edge_of_flight_line(p::LazIO.LazPoint) = Bool((p.return_number & 0b10000000) >> 7)
 
-classification(p::LazIO.LazPoint) = (p.classification & 0b00011111)
-synthetic(p::LazIO.LazPoint) = Bool((p.classification & 0b00100000) >> 5)
-key_point(p::LazIO.LazPoint) = Bool((p.classification & 0b01000000) >> 6)
-withheld(p::LazIO.LazPoint) = Bool((p.classification & 0b10000000) >> 7)
+LasIO.classification(p::LazIO.LazPoint) = (p.classification & 0b00011111)
+LasIO.synthetic(p::LazIO.LazPoint) = Bool((p.classification & 0b00100000) >> 5)
+LasIO.key_point(p::LazIO.LazPoint) = Bool((p.classification & 0b01000000) >> 6)
+LasIO.withheld(p::LazIO.LazPoint) = Bool((p.classification & 0b10000000) >> 7)

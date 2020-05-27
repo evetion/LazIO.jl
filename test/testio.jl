@@ -41,10 +41,10 @@ end
     @test first(ds) isa LazIO.LazPoint
     @inferred first(ds)
     @test LazIO.boundingbox(ds) == (xmin = 1.44e6, ymin = 375000.03, zmin = 832.1800000000001, xmax = 1.44499996e6, ymax = 379999.99, zmax = 972.6700000000001)
-    @test LazIO.return_number(first(ds)) == 0x00
-    @test LazIO.number_of_returns(first(ds)) == 0x00
-    @test LazIO.scan_direction(first(ds)) == false
-    @test LazIO.edge_of_flight_line(first(ds)) == false
+    @test return_number(first(ds)) == 0x00
+    @test number_of_returns(first(ds)) == 0x00
+    @test scan_direction(first(ds)) == false
+    @test edge_of_flight_line(first(ds)) == false
     close(ds)
 end
 
@@ -52,15 +52,15 @@ end
     ds = LazIO.open(testfile_str)
     p = first(ds)
 
-    @test LazIO.return_number(p) == 0
-    @test LazIO.number_of_returns(p) == 0
-    @test LazIO.scan_direction(p) == 0
-    @test LazIO.edge_of_flight_line(p) == 0
+    @test return_number(p) == 0
+    @test number_of_returns(p) == 0
+    @test scan_direction(p) == 0
+    @test edge_of_flight_line(p) == 0
 
-    @test LazIO.classification(p) == 2
-    @test LazIO.synthetic(p) == false
-    @test LazIO.key_point(p) == false
-    @test LazIO.withheld(p) == false
+    @test classification(p) == 2
+    @test synthetic(p) == false
+    @test key_point(p) == false
+    @test withheld(p) == false
 end
 
 @testset "Table interface" begin
