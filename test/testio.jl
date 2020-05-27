@@ -26,9 +26,9 @@ header, pointdata_all = load(testfile)
 end
 
 @testset "Range indexing" begin
-    _, pointdata_276 = load(testfile, range=276)
-    _, pointdata_array = load(testfile, range=[1,276,277,497536])
-    _, pointdata_colon = load(testfile, range=:)
+    _, pointdata_276 = load(testfile, range = 276)
+    _, pointdata_array = load(testfile, range = [1,276,277,497536])
+    _, pointdata_colon = load(testfile, range = :)
 
     @test pointdata_all[1] == pointdata_colon[1] == pointdata_array[1]
     @test pointdata_276[1] == pointdata_colon[276] == pointdata_array[2]
@@ -41,11 +41,26 @@ end
     @test first(ds) isa LazIO.LazPoint
     @inferred first(ds)
     @test LazIO.boundingbox(ds) == (xmin = 1.44e6, ymin = 375000.03, zmin = 832.1800000000001, xmax = 1.44499996e6, ymax = 379999.99, zmax = 972.6700000000001)
-    @test LazIO.return_number(first(ds)) == 0x00
-    @test LazIO.number_of_returns(first(ds)) == 0x00
-    @test LazIO.scan_direction(first(ds)) == false
-    @test LazIO.edge_of_flight_line(first(ds)) == false
+    @test return_number(first(ds)) == 0x00
+    @test number_of_returns(first(ds)) == 0x00
+    @test scan_direction(first(ds)) == false
+    @test edge_of_flight_line(first(ds)) == false
     close(ds)
+end
+
+@testset "Point unpacking" begin
+    ds = LazIO.open(testfile_str)
+    p = first(ds)
+
+    @test return_number(p) == 0
+    @test number_of_returns(p) == 0
+    @test scan_direction(p) == 0
+    @test edge_of_flight_line(p) == 0
+
+    @test classification(p) == 2
+    @test synthetic(p) == false
+    @test key_point(p) == false
+    @test withheld(p) == false
 end
 
 @testset "Table interface" begin
