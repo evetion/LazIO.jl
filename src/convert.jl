@@ -8,11 +8,11 @@ LasHeader(h::LazHeader) =
         h.project_ID_GUID_data_1,
         h.project_ID_GUID_data_2,
         h.project_ID_GUID_data_3,
-        join(convert(NTuple{8, Char}, h.project_ID_GUID_data_4)),
+        join(convert(NTuple{8,Char}, h.project_ID_GUID_data_4)),
         h.version_major,
         h.version_minor,
-        join(convert(NTuple{32, Char}, h.system_identifier)),
-        join(convert(NTuple{32, Char}, h.generating_software)),
+        join(convert(NTuple{32,Char}, h.system_identifier)),
+        join(convert(NTuple{32,Char}, h.generating_software)),
         h.file_creation_day,
         h.file_creation_year,
         h.header_size,
@@ -34,7 +34,7 @@ LasHeader(h::LazHeader) =
         h.min_y,
         h.max_z,
         h.min_z,
-        Vector{LasVariableLengthRecord}(),
+        [convert(LasIO.LasVariableLengthRecord, unsafe_load(h.vlrs, i)) for i in 1:h.number_of_variable_length_records],
         Vector{UInt8}()
     )
 
