@@ -1,3 +1,5 @@
+using LinearAlgebra
+
 struct LazDataset
     filename::String
     filehandle::Ptr{Cvoid}
@@ -22,9 +24,10 @@ function open(f::AbstractString)
     header_ptr = Ref{Ptr{LazHeader}}()
     @check laszip_reader[] laszip_get_header_pointer(laszip_reader[], header_ptr)
     header = unsafe_load(header_ptr[])
+    trans = AffineMap(Diagonal(SA_F64[header.x_scale_factor 0 0; 0 header.y_scale_factor 0; 0 0 header.z_scale_factor]), SA_F64[header.x_offset, header.y_offset, header.z_offset])
 
     # Get a pointer to the points that will be read
-    point_ptr = Ref{Ptr{LazPoint}}()
+    point_ptr = Ref{Ptr{LazPoint{trans}}}()
     @check laszip_reader[] laszip_get_point_pointer(laszip_reader[], point_ptr)
 
     LazDataset(f, laszip_reader[], header, point_ptr[])
