@@ -26,9 +26,9 @@ header, pointdata_all = load(testfile)
 end
 
 @testset "Range indexing" begin
-    _, pointdata_276 = load(testfile, range = 276)
-    _, pointdata_array = load(testfile, range = [1,276,277,497536])
-    _, pointdata_colon = load(testfile, range = :)
+    _, pointdata_276 = load(testfile, range=276)
+    _, pointdata_array = load(testfile, range=[1,276,277,497536])
+    _, pointdata_colon = load(testfile, range=:)
 
     @test pointdata_all[1] == pointdata_colon[1] == pointdata_array[1]
     @test pointdata_276[1] == pointdata_colon[276] == pointdata_array[2]
@@ -61,6 +61,11 @@ end
     @test synthetic(p) == false
     @test key_point(p) == false
     @test withheld(p) == false
+
+    @test p.xyz = (1, 2, 3)
+    @test p.x = 1.0
+    @test p.y = 2.0
+    @test p.z = 3.0
 end
 
 @testset "Table interface" begin
