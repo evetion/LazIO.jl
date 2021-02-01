@@ -6,6 +6,8 @@ Tables.rows(ds::LazDataset) = ds
 # TODO Only support fields that are there based on las version
 Tables.schema(ds::LazDataset) = Tables.Schema(map(Symbol, fieldnames(LazIO.LazPoint)), Tuple{fieldtypes(LazIO.LazPoint)...})
 
+const column_names = (fieldnames(LazPoint)..., :number_of_returns)
+
 
 """Determine offset as implemented by LasTools."""
 function determine_offset(min_value, max_value, scale; threshold=10^7)
@@ -17,6 +19,7 @@ function determine_offset(min_value, max_value, scale; threshold=10^7)
     (muladd(round(Int32, (max_value - s) / scale), scale, s) > 0) == (max_value > 0) || error("Can't fit offset in this scale, try to coarsen it.")
 end
 
+"""Correctly set fields that require conversion or packing."""
 function Base.setproperty!(p::LazPoint, name, value, header)
     if name == :X && typeof(value) != Int32
         p.X = round(Int32, (value - header.x_offset) / header.x_scale_factor)
@@ -24,8 +27,17 @@ function Base.setproperty!(p::LazPoint, name, value, header)
         p.Y = round(Int32, (value - header.y_offset) / header.y_scale_factor)
     elseif name == :Z && typeof(value) != Int32
         p.Z = round(Int32, (value - header.z_offset) / header.z_scale_factor)
+    elseif name == :classification && typeof(value) != UInt8
+        classid = get(classes, Symbol(value), user_defined_class)
+        p.classification = UInt8(LasIO.withheld(p)) << 7 | UInt8(LasIO.key_point(p)) << 6 | UInt8(LasIO.synthetic(p)) << 5 | UInt8(classid)
+    elseif name == :gps_time && typeof(value) != Float64
+        p.gps_time = LasIO.gps_time(value)
+    elseif name == :return_number
+        p.return_number = UInt8(LasIO.edge_of_flight_line(p)) << 7 | UInt8(LasIO.scan_direction(p)) << 6 | LasIO.number_of_returns(p) << 3 | UInt8(value)
+    elseif name == :number_of_returns
+        p.return_number = UInt8(LasIO.edge_of_flight_line(p)) << 7 | UInt8(LasIO.scan_direction(p)) << 6 | UInt8(value) << 3 | LasIO.return_number(p)
     else
-        setfield!(p, name, value)
+        setproperty!(p, name, value)
     end
 end
 
@@ -33,7 +45,7 @@ function write(fn::AbstractString, table, bbox; scale=0.01)
 
     schema = Tables.schema(table)
     isnothing(schema) && error("A Schema is required")
-    all(name in fieldnames(LazPoint) for name in schema.names) || error("Can't map all columns to LazPoint")
+    all(name in column_names for name in schema.names) || error("Can't map all columns to LazPoint")
 
     rows = Tables.rows(table)
 
