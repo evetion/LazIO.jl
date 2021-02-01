@@ -10,6 +10,10 @@ function Base.show(io::IO, ds::LazDataset)
     println(io, "LazDataset of $(ds.filename) with $n points.")
 end
 
+function bounds(ds::LazDataset)
+    bounds(ds.header)
+end
+
 function open(f::AbstractString)
     # Setup laszip reader
     laszip_reader = Ref{Ptr{Cvoid}}()

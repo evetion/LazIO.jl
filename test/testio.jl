@@ -3,6 +3,7 @@ using LazIO
 using LasIO
 using Test
 using Tables
+using Dates
 
 workdir = @__DIR__
 lasio_testdir = joinpath(dirname(pathof(LasIO)), "..", "test")
@@ -26,9 +27,9 @@ header, pointdata_all = load(testfile)
 end
 
 @testset "Range indexing" begin
-    _, pointdata_276 = load(testfile, range = 276)
-    _, pointdata_array = load(testfile, range = [1,276,277,497536])
-    _, pointdata_colon = load(testfile, range = :)
+    _, pointdata_276 = load(testfile, range=276)
+    _, pointdata_array = load(testfile, range=[1,276,277,497536])
+    _, pointdata_colon = load(testfile, range=:)
 
     @test pointdata_all[1] == pointdata_colon[1] == pointdata_array[1]
     @test pointdata_276[1] == pointdata_colon[276] == pointdata_array[2]
@@ -69,7 +70,27 @@ end
     @test Tables.rowaccess(LazIO.LazDataset)
     @test first(ds) isa LazIO.LazPoint
     @inferred first(Tables.rows(ds))
+
+    LazIO.write("test_table.laz", ds, LazIO.bounds(ds), scale=0.1)
     close(ds)
+
+    manual_fn = "test_table_manual.laz"
+    table = (X = [11000.01, 12000., 32000.],
+             Y = [11000., 12000., 32000.],
+             Z = [11000., 12000., 32000.01],
+             classification = ["ground", "test", "unclassified"],
+             gps_time = fill(now(), 3),
+             return_number = [1,2,1],
+             number_of_returns = [1,2,3])
+    bounds = (min_x = 11000.01, max_x = 32000., min_y = 11000., max_y = 32000., min_z = 11000., max_z = 32000.01)
+    LazIO.write(manual_fn, table, bounds, scale=0.01)
+
+    ds = LazIO.open(manual_fn)
+
+    @test length(ds) == 3
+    @test first(ds).X == 1099901
+    @test muladd(first(ds).X, ds.header.x_scale_factor, ds.header.x_offset) ≈ 11000.01
+    @test LasIO.classification(first(ds)) == LazIO.classes.ground
 end
 
 @testset "Writing" begin
