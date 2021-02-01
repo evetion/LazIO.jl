@@ -69,7 +69,18 @@ end
     @test Tables.rowaccess(LazIO.LazDataset)
     @test first(ds) isa LazIO.LazPoint
     @inferred first(Tables.rows(ds))
+
+    LazIO.write("test_table.laz", ds, LazIO.bounds(ds), scale=0.1)
     close(ds)
+
+    manual_fn = "test_table_manual.laz"
+    table = (X=[11000.01, 12000., 32000.], Y=[11000., 12000., 32000.], Z=[11000., 12000., 32000.01])
+    bounds = (min_x=11000.01, max_x=32000., min_y=11000., max_y=32000., min_z=11000., max_z=32000.01)
+    LazIO.write(manual_fn, table, bounds , scale=0.01)
+    ds = LazIO.open(manual_fn)
+    @test length(ds) == 3
+    @test first(ds).X == 1099901
+    @test muladd(first(ds).X, ds.header.x_scale_factor, ds.header.x_offset) ≈ 11000.01
 end
 
 @testset "Writing" begin
