@@ -17,6 +17,7 @@ function determine_offset(min_value, max_value, scale; threshold=10^7)
     # Try to convert back and forth and check overflow
     (muladd(round(Int32, (min_value - s) / scale), scale, s) > 0) == (min_value > 0) || error("Can't fit offset in this scale, try to coarsen it.")
     (muladd(round(Int32, (max_value - s) / scale), scale, s) > 0) == (max_value > 0) || error("Can't fit offset in this scale, try to coarsen it.")
+    s
 end
 
 """Correctly set fields that require conversion or packing."""
