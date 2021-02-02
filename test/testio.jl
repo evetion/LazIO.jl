@@ -88,7 +88,7 @@ end
     ds = LazIO.open(manual_fn)
 
     @test length(ds) == 3
-    @test first(ds).X == 1099901
+    @test first(ds).X == 1100001
     @test muladd(first(ds).X, ds.header.x_scale_factor, ds.header.x_offset) ≈ 11000.01
     @test LasIO.classification(first(ds)) == LazIO.classes.ground
 end
