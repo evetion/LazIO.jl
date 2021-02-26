@@ -83,10 +83,11 @@ end
              return_number = [1,2,1],
              number_of_returns = [1,2,3])
     bounds = (min_x = 11000.01, max_x = 32000., min_y = 11000., max_y = 32000., min_z = 11000., max_z = 32000.01)
-    LazIO.write(manual_fn, table, bounds, scale=0.01)
+    LazIO.write(manual_fn, table, bounds, scale=0.01, system_identifier=LazIO.writestring("Laser shooter, pew pew!", 32))
 
     ds = LazIO.open(manual_fn)
 
+    @test LazIO.readstring(ds.header.system_identifier) == "Laser shooter, pew pew!"
     @test length(ds) == 3
     @test first(ds).X == 1100001
     @test muladd(first(ds).X, ds.header.x_scale_factor, ds.header.x_offset) ≈ 11000.01
