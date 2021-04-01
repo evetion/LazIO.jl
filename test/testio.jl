@@ -71,7 +71,7 @@ end
     @test first(ds) isa LazIO.LazPoint
     @inferred first(Tables.rows(ds))
 
-    LazIO.write("test_table.laz", ds, LazIO.bounds(ds), scale=0.1)
+    LazIO.write("test_table.laz", ds, LazIO.bounds(ds), scalex=0.1)
     close(ds)
 
     manual_fn = "test_table_manual.laz"
@@ -83,7 +83,7 @@ end
              return_number = [1,2,1],
              number_of_returns = [1,2,3])
     bounds = (min_x = 11000.01, max_x = 32000., min_y = 11000., max_y = 32000., min_z = 11000., max_z = 32000.01)
-    LazIO.write(manual_fn, table, bounds, scale=0.01, system_identifier=LazIO.writestring("Laser shooter, pew pew!", 32))
+    LazIO.write(manual_fn, table, bounds, scalex=0.01, system_identifier=LazIO.writestring("Laser shooter, pew pew!", 32))
 
     ds = LazIO.open(manual_fn)
 

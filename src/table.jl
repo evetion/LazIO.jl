@@ -41,7 +41,7 @@ function Base.setproperty!(p::LazPoint, name, value, header)
     end
 end
 
-function write(fn::AbstractString, table, bbox; scale=0.01, kwargs...)
+function write(fn::AbstractString, table, bbox; scalex=0.01, scaley=0.01, scalez=0.01, kwargs...)
 
     schema = Tables.schema(table)
     isnothing(schema) && error("A Schema is required")
@@ -50,12 +50,12 @@ function write(fn::AbstractString, table, bbox; scale=0.01, kwargs...)
     rows = Tables.rows(table)
 
     header = LazHeader(;kwargs...)
-    header.x_offset = determine_offset(bbox.min_x, bbox.max_x, scale)
-    header.y_offset = determine_offset(bbox.min_y, bbox.max_y, scale)
-    header.z_offset = determine_offset(bbox.min_z, bbox.max_z, scale)
-    header.x_scale_factor = scale
-    header.y_scale_factor = scale
-    header.z_scale_factor = scale
+    header.x_offset = determine_offset(bbox.min_x, bbox.max_x, scalex)
+    header.y_offset = determine_offset(bbox.min_y, bbox.max_y, scaley)
+    header.z_offset = determine_offset(bbox.min_z, bbox.max_z, scalez)
+    header.x_scale_factor = scalex
+    header.y_scale_factor = scaley
+    header.z_scale_factor = scalez
 
     p = LazPoint()
 
