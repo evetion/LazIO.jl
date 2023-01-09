@@ -16,6 +16,95 @@ end
     description::NTuple{32,UInt8} = ntuple(i -> UInt8(0x0), 32)
     data::Ptr{UInt8} = pointer("")
 end
+Base.summary(lv::LazVLR) = "LazVLR $(readstring(lv.description))"
+
+@with_kw mutable struct Classification
+    classnumber::UInt8 = UInt8(0)
+    description::NTuple{16,Int8} = ntuple(i -> Int8(0x0), 15)
+end
+Base.summary(c::Classification) = "Classification $classnumber=$(readstring(c.description))"
+
+
+@with_kw mutable struct ExtraBytes
+    reserved::NTuple{2,UInt8}
+    data_type::UInt8
+    options::UInt8
+    name::NTuple{32,UInt8}
+    unused::NTuple{4,UInt8}
+    no_data::Float64  # should be reinterpreted in `data_type`
+    deprecated1::NTuple{16,UInt8}
+    min::Float64  # should be reinterpreted in `data_type`
+    deprecated2::NTuple{16,UInt8}
+    max::Float64  # should be reinterpreted in `data_type`
+    deprecated3::NTuple{16,UInt8}
+    scale::Float64  # should be reinterpreted in `data_type`
+    deprecated4::NTuple{16,UInt8}
+    offset::Float64  # should be reinterpreted in `data_type`
+    deprecated5::NTuple{16,UInt8}
+    description::NTuple{32,Int8} = ntuple(i -> Int8(0x0), 32)
+end
+Base.summary(eb::ExtraBytes) = "ExtraBytes $(readstring(eb.description)) with type $(type(eb))"
+
+function type(eb::ExtraBytes)::Union{Real,Nothing}
+    if eb.data_type == 0
+        return Nothing
+    elseif eb.data_type == 1
+        return UInt8
+    elseif eb.data_type == 2
+        return Int8
+    elseif eb.data_type == 3
+        return UInt16
+    elseif eb.data_type == 4
+        return Int16
+    elseif eb.data_type == 5
+        return UInt32
+    elseif eb.data_type == 6
+        return UInt32
+    elseif eb.data_type == 7
+        return UInt64
+    elseif eb.data_type == 8
+        return Int64
+    elseif eb.data_type == 9
+        return Float32
+    elseif eb.data_type == 10
+        return Float64
+    else
+        return Nothing
+    end
+end
+
+@enum OptionsEnum::UInt8 begin
+    NODATA = 0
+    MIN = 1
+    MAX = 2
+    SCALE = 3
+    OFFSET = 4
+end
+
+function cast(v, eb::ExtraBytes)
+    t = type(eb)
+    if isnothing(t)
+        return nothing
+    else
+        t(v)
+    end
+end
+
+function nodata(eb::ExtraBytes)
+    eb.options & NODATA == 0 ? Nothing : cast(eb.no_data, eb)
+end
+function _min(eb::ExtraBytes)
+    eb.options & MIN == 0 ? Nothing : cast(eb.min, eb)
+end
+function _max(eb::ExtraBytes)
+    eb.options & MAX == 0 ? Nothing : cast(eb.max, eb)
+end
+function scale(eb::ExtraBytes)
+    eb.options & SCALE == 0 ? cast(1, eb) : cast(eb.scale, eb)
+end
+function offset(eb::ExtraBytes)
+    eb.options & OFFSET == 0 ? cast(0, eb) : cast(eb.offset, eb)
+end
 
 Base.convert(::Type{LasIO.LasVariableLengthRecord}, vlr::LazVLR) =
     LasIO.LasVariableLengthRecord(
@@ -62,7 +151,7 @@ Base.convert(::Type{LasIO.LasVariableLengthRecord}, vlr::LazVLR) =
     min_y::Float64 = Float64(0.0)
     max_z::Float64 = Float64(0.0)
     min_z::Float64 = Float64(0.0)
-    start_of_waveform_data_packet_record::UInt64  = UInt64(0)
+    start_of_waveform_data_packet_record::UInt64 = UInt64(0)
     start_of_first_extended_variable_length_record::UInt64 = UInt64(0)
     number_of_extended_variable_length_records::UInt32 = UInt32(0)
     extended_number_of_point_records::UInt64 = UInt64(0)
@@ -76,7 +165,7 @@ Base.convert(::Type{LasIO.LasVariableLengthRecord}, vlr::LazVLR) =
 end
 
 function bounds(h::LazHeader)
-    (min_x = h.min_x, max_x = h.max_x, min_y = h.min_y, max_y = h.max_y, min_z = h.min_z, max_z = h.max_z)
+    (min_x=h.min_x, max_x=h.max_x, min_y=h.min_y, max_y=h.max_y, min_z=h.min_z, max_z=h.max_z)
 end
 
 @with_kw mutable struct LazPoint
@@ -130,37 +219,37 @@ end
     extra_bytes::Ptr{UInt8} = pointer("")
 end
 
-const classes = (created = 0,
-    unclassified = 1,
-    ground = 2,
-    low_vegation = 3,
-    medium_vegation = 4,
-    high_vegetation = 5,
-    building = 6,
-    noise = 7,
-    key_point = 8,
-    water = 9,
-    overlap = 12,)
+const classes = (created=0,
+    unclassified=1,
+    ground=2,
+    low_vegation=3,
+    medium_vegation=4,
+    high_vegetation=5,
+    building=6,
+    noise=7,
+    key_point=8,
+    water=9,
+    overlap=12,)
 const user_defined_class = 31 # actually reserved
-const classes_extended = (created = 0,
-    unclassified = 1,
-    ground = 2,
-    low_vegation = 3,
-    medium_vegation = 4,
-    high_vegetation = 5,
-    building = 6,
-    noise = 7,
-    reserved = 8,
-    water = 9,
-    rail = 10,
-    road = 11,
-    reserved_ = 12,
-    wire_guard = 13,
-    wire_conductor = 14,
-    tower_transmission = 15,
-    wire_construct = 16,
-    bridge = 17,
-    noise_high = 18,)
+const classes_extended = (created=0,
+    unclassified=1,
+    ground=2,
+    low_vegation=3,
+    medium_vegation=4,
+    high_vegetation=5,
+    building=6,
+    noise=7,
+    reserved=8,
+    water=9,
+    rail=10,
+    road=11,
+    reserved_=12,
+    wire_guard=13,
+    wire_conductor=14,
+    tower_transmission=15,
+    wire_construct=16,
+    bridge=17,
+    noise_high=18,)
 const user_defined_class_extended = 64
 
 LasIO.return_number(p::LazIO.LazPoint) = (p.return_number & 0b00000111)
