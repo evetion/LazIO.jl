@@ -20,7 +20,7 @@ GeoInterface.isgeometry(::Type{<:Dataset}) = true
 GeoInterface.geomtrait(::Dataset) = MultiPointTrait()
 # GeoInterface.trait(::Dataset) = FeatureCollectionTrait()
 GeoInterface.ngeom(::MultiPointTrait, ds::Dataset) = length(ds)
-GeoInterface.getgeom(::MultiPointTrait, ds::Dataset) = collect(ds)
+GeoInterface.getgeom(::MultiPointTrait, ds::Dataset) = ds
 GeoInterface.getgeom(::MultiPointTrait, ds::Dataset, i) = ds[i]
 
 # GeoInterface.crs(geomtrait(geom), geom::customgeom)::GeoFormatTypes.GeoFormat}
@@ -28,6 +28,6 @@ GeoInterface.extent(::MultiPointTrait, ds::Dataset) = Extent(X=(ds.header.min_x,
 
 GeoInterface.isfeaturecollection(::Type{Dataset}) = true
 GeoInterface.getfeature(::MultiPointTrait, ds::Dataset, i) = ds[i]
-GeoInterface.getfeature(::MultiPointTrait, ds::Dataset) = collect(ds)
+GeoInterface.getfeature(::MultiPointTrait, ds::Dataset) = ds
 GeoInterface.nfeature(::MultiPointTrait, ds::Dataset) = length(ds)
 GeoInterface.geometrycolumns(::Dataset) = ()
