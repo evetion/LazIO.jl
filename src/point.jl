@@ -1,8 +1,6 @@
 abstract type Point end
 struct Point0 <: Point
-    x::Float64
-    y::Float64
-    z::Float64
+    geometry::SVector{3,Float64}
     intensity::UInt16
     return_number::UInt8
     number_of_returns::UInt8
@@ -17,9 +15,8 @@ struct Point0 <: Point
 end
 
 function Point0(rp, am)
-    x, y, z = am((rp.X, rp.Y, rp.Z))
     Point0(
-        x, y, z, rp.intensity,
+        am((rp.X, rp.Y, rp.Z)), rp.intensity,
         return_number(rp),
         number_of_returns(rp),
         scan_direction(rp),
@@ -33,9 +30,7 @@ function Point0(rp, am)
 end
 
 struct Point1 <: Point
-    x::Float64
-    y::Float64
-    z::Float64
+    geometry::SVector{3,Float64}
     intensity::UInt16
     return_number::UInt8
     number_of_returns::UInt8
@@ -51,9 +46,8 @@ struct Point1 <: Point
 end
 
 function Point1(rp, am)
-    x, y, z = am((rp.X, rp.Y, rp.Z))
     Point1(
-        x, y, z, rp.intensity,
+        am((rp.X, rp.Y, rp.Z)), rp.intensity,
         return_number(rp),
         number_of_returns(rp),
         scan_direction(rp),
@@ -68,9 +62,7 @@ function Point1(rp, am)
 end
 
 struct Point2 <: Point
-    x::Float64
-    y::Float64
-    z::Float64
+    geometry::SVector{3,Float64}
     intensity::UInt16
     return_number::UInt8
     number_of_returns::UInt8
@@ -88,9 +80,8 @@ struct Point2 <: Point
 end
 
 function Point2(rp, am)
-    x, y, z = am((rp.X, rp.Y, rp.Z))
     Point2(
-        x, y, z, rp.intensity,
+        am((rp.X, rp.Y, rp.Z)), rp.intensity,
         return_number(rp),
         number_of_returns(rp),
         scan_direction(rp),
@@ -108,9 +99,7 @@ end
 
 
 struct Point3 <: Point
-    x::Float64
-    y::Float64
-    z::Float64
+    geometry::SVector{3,Float64}
     intensity::UInt16
     return_number::UInt8
     number_of_returns::UInt8
@@ -129,9 +118,8 @@ struct Point3 <: Point
 end
 
 function Point3(rp, am)
-    x, y, z = am((rp.X, rp.Y, rp.Z))
     Point3(
-        x, y, z, rp.intensity,
+        am((rp.X, rp.Y, rp.Z)), rp.intensity,
         return_number(rp),
         number_of_returns(rp),
         scan_direction(rp),

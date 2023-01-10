@@ -92,7 +92,7 @@ end
 
     @test LazIO.readstring(ds.header.system_identifier) == "Laser shooter, pew pew!"
     @test length(ds) == 3
-    @test first(ds).x == 11000.01
+    @test first(ds).geometry[1] == 11000.01
     @test first(ds).classification == LazIO.classes.ground
 end
 
@@ -169,9 +169,9 @@ end
     p2 = first(ds_out)
     header1 = ds.header
     header2 = ds_out.header
-    @test p1.x === p2.x
-    @test p1.y === p2.y
-    @test p1.z === p2.z
+    @test p1.geometry[1] === p2.geometry[1]
+    @test p1.geometry[2] === p2.geometry[2]
+    @test p1.geometry[3] === p2.geometry[3]
     @test p1.intensity === p2.intensity
     @test header1.number_of_point_records === header2.number_of_point_records
 
@@ -197,9 +197,9 @@ end
     p2 = first(ds_out)
     header1 = ds.header
     header2 = ds_out.header
-    @test p1.x === p2.x
-    @test p1.y === p2.y
-    @test p1.z === p2.z
+    @test p1.geometry[1] === p2.geometry[1]
+    @test p1.geometry[2] === p2.geometry[2]
+    @test p1.geometry[3] === p2.geometry[3]
     @test p1.intensity === p2.intensity
     @test header1.number_of_point_records === header2.number_of_point_records
 
@@ -212,6 +212,9 @@ end
     ds = LazIO.open(testfile_str)
     GeoInterface.testgeometry(ds)
     GeoInterface.testgeometry(ds[1])
+    GeoInterface.testgeometry(collect(ds)[1:2])
     @test_broken GeoInterface.testfeature(ds[1])
     @test_broken GeoInterface.testfeaturecollection(ds)
+
+    @test GeoInterface.z(GeoInterface.getpoint(collect(ds)[1:2], 1)) == 846.66
 end

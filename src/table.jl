@@ -48,7 +48,11 @@ function Base.setproperty!(p::RawPoint, name, value, header)
         p.return_number = UInt8(value) << 7 | UInt8(LasIO.scan_direction(p)) << 6 | LasIO.number_of_returns(p) << 3 | LasIO.return_number(p)
     elseif name == :point_source_id
         p.point_source_ID = value
-    else
+    elseif name == :geometry
+        p.X = round(Int32, (value[1] - header.x_offset) / header.x_scale_factor)
+        p.Y = round(Int32, (value[2] - header.y_offset) / header.y_scale_factor)
+        p.Z = round(Int32, (value[3] - header.z_offset) / header.z_scale_factor)
+    elseif name in fieldnames(typeof(p))
         setproperty!(p, name, value)
     end
 end
@@ -58,7 +62,7 @@ function write(fn::AbstractString, table, bbox; scalex=0.01, scaley=0.01, scalez
 
     schema = Tables.schema(table)
     isnothing(schema) && error("A Schema is required")
-    all(name in column_names for name in schema.names) || error("Can't map all columns to RawPoint")
+    all(name in column_names for name in schema.names) || @warn("Can't map all columns to RawPoint")
 
     rows = Tables.rows(table)
 
