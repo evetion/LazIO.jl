@@ -1,25 +1,34 @@
 module LazIO
 
-using Libdl
+using CoordinateTransformations
+using Dates
+using Extents
 using FileIO
-using LasIO
 using FixedPointNumbers
+using GeoInterface
+using LasIO
 using LASzip_jll
+using Libdl
+using LinearAlgebra
+using StaticArrays
+using UUIDs
 
 # Module initialization function
 function __init__()
     # temporary _ until LasIO defers this key
-    add_format(format"LAZ_", (), ".laz", [:LazIO])
+    add_format(format"LAZ_", (), ".laz", [:LazIO => UUID("c3605908-9f0f-11e8-0a72-0d361c15a277")])
 end
 
 include("utils.jl")
 include("laszip_h.jl")
+include("point.jl")
 include("laszip.jl")
 include("fileio.jl")
 include("convert.jl")
 include("dataset.jl")
 include("write.jl")
 include("table.jl")
+include("geointerface.jl")
 
 export return_number
 export number_of_returns

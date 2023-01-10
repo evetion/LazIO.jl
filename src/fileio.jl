@@ -1,9 +1,14 @@
 # File load
 
-load(f::File{format"LAZ_"}; range::Union{UnitRange{T},Integer, Colon, Array{T, 1}} where T<:Integer=:) = load(f.filename, range=range)
+load(f::File{format"LAZ_"}; range::Union{UnitRange{T},Integer,Colon,Array{T,1}} where {T<:Integer}=:) = load(f.filename, range=range)
 loadheader(f::File{format"LAZ_"}) = loadheader(f.filename)
 
 function loadheader(f::String)
+    Base.depwarn(
+        "The `loadheader(f)` will be deprecated in a future release. " *
+        "Please use `ds = open(f)` and use `header(ds)` instead.",
+        :loadheader,
+    )
     # Setup laszip reader
     laszip_reader = Ref{Ptr{Cvoid}}()
     @check laszip_reader[] laszip_create(laszip_reader)
@@ -27,13 +32,17 @@ function loadheader(f::String)
     header
 end
 
-function load(f::String; range::Union{UnitRange{T}, Integer, Colon, Array{T, 1}} where T <:Integer=:)
+function load(f::String; range::Union{UnitRange{T},Integer,Colon,Array{T,1}} where {T<:Integer}=:)
+    Base.depwarn(
+        "The `load(f; range)` will be deprecated in a future release. " *
+        "Please use `ds = open(f)` and use `header(ds), collect(ds)[range]` instead.",
+        :load,
+    )
+
     version_major = Ref{UInt8}(0)
     version_minor = Ref{UInt8}(0)
     version_revision = Ref{UInt16}(0)
     version_build = Ref{UInt32}(0)
-    pfo = pointer_from_objref
-    pto = unsafe_pointer_to_objref
 
     laszip_get_version(version_major, version_minor, version_revision, version_build)
     @debug "LASzip DLL $(version_major[]) $(version_minor[]) $(version_revision[]) (build $(version_build[]))"
@@ -53,7 +62,7 @@ function load(f::String; range::Union{UnitRange{T}, Integer, Colon, Array{T, 1}}
     header = LasHeader(unsafe_load(header_ptr[]))
 
     # Get a pointer to the points that will be read
-    point_ptr = Ref{Ptr{LazPoint}}()
+    point_ptr = Ref{Ptr{RawPoint}}()
     @check laszip_reader[] laszip_get_point_pointer(laszip_reader[], point_ptr)
 
     n = header.records_count
@@ -66,11 +75,11 @@ function load(f::String; range::Union{UnitRange{T}, Integer, Colon, Array{T, 1}}
     @debug "Reading $(length(r)) point(s)."
     for (i, ii) in enumerate(r)
         # Requested point not at current pointer
-        if ii-1 != pointerindex
+        if ii - 1 != pointerindex
             # Seek it and set pointer
             @debug "Seeking to point $ii"
-            laszip_seek_point(laszip_reader[], Int64(ii-1))
-            pointerindex = ii-1
+            laszip_seek_point(laszip_reader[], Int64(ii - 1))
+            pointerindex = ii - 1
         end
         laszip_read_point(laszip_reader[])
         pointerindex += 1

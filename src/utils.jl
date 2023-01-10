@@ -8,11 +8,11 @@ function laszip_error(laszip_obj::Ptr{Cvoid})
 end
 
 macro check(obj, ex)
-    return :( $(esc(ex)) == 0 ? nothing : laszip_error($(esc(obj))) )
+    return :($(esc(ex)) == 0 ? nothing : laszip_error($(esc(obj))))
 end
 
 
-function readstring(s::NTuple{T,UInt8}) where T
+function readstring(s::NTuple{T,UInt8}) where {T}
     lastchar = findlast(s .!= 0)
     if isnothing(lastchar)
         return ""

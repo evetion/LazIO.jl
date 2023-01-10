@@ -11,39 +11,41 @@ Uses the [LASzip](https://github.com/LASzip/LASzip/) shared library to read comp
 ```julia
 julia> using LazIO
 
-# Load header and all points
-julia> LazIO.load("test/libLAS_1.2.laz")
-(LasHeader with 497536 points.
-, Vector{LasIO.LasPoint0} with 497536 points.
-)
-
-# Load header and range of points
-julia> h, p = LazIO.load("test/libLAS_1.2.laz", range=2:10)
-(LasHeader with 497536 points.
-, Vector{LasIO.LasPoint0} with 9 points.
-)
-
-# Open file and iterate over points (streaming)
+# Open file and iterate over points
 julia> ds = LazIO.open("test/libLAS_1.2.laz")
-LazDataset of test/libLAS_1.2.laz with 497536 points.
+LazIO Dataset of test/libLAS_1.2.laz with 497536 points of version 0.
 
-julia> sum = map(Int32, (0,0,0))  # Int32, not yet scaled and offset
-julia> for p in ds
-           global sum = sum .+ (p.X, p.Y, p.Z)
-       end
-julia> sum ./ ds.header.number_of_point_records
-(3497.988658107152, 3741.789882541163, -164.49942114741447)
+# Each point is correctly scaled and has its return_number and classification widened
+julia> p = ds[1]
+LazIO.Point0(1.44013394e6, 375000.23, 846.66, 0x00fa, 0x00, 0x00, 0x00, false, 2, false, false, false, 0x00, 0x001d)
 
-# Or use the tables interface
+# This results in accessible attributes, such as edge_of_flightline and withheld
+julia> fieldnames(typeof(p))
+(:x, :y, :z, :intensity, :return_number, :number_of_returns, :scan_direction, :edge_of_flight_line, :classification, :synthetic, :key_point, :withheld, :user_data, :point_source_id)
+
+# LazIO implements the GeoInterface
+julia> using GeoInterface
+julia> GeoInterface.coordinates(p)
+3-element Vector{Float64}:
+      1.44013394e6
+ 375000.23
+    846.66
+julia> GeoInterface.extent(ds)
+Extent(X = (1.44e6, 1.44499996e6), Y = (375000.03, 379999.99), Z = (832.1800000000001, 972.6700000000001))
+
+# Or one can use the Tables interface
 julia> using DataFrames
 julia> DataFrame(ds)
-497536×19 DataFrame. Omitted printing of 12 columns
-│ Row    │ X         │ Y        │ Z     │ intensity │ return_number
-│        │ Int32     │ Int32    │ Int32 │ UInt16    │ UInt8
-├────────┼───────────┼──────────┼───────┼───────────┼──────────────
-│ 1      │ 144013394 │ 37500023 │ 84666 │ 0x00fa    │ 0x00
-│ 2      │ 144012426 │ 37500049 │ 84655 │ 0x00f5    │ 0x00
-│ 3      │ 144011447 │ 37500077 │ 84644 │ 0x00ef    │ 0x00
-│ 4      │ 144010469 │ 37500104 │ 84632 │ 0x00fb    │ 0x00
-⋮
+497536×14 DataFrame
+    Row │ x          y               z        intensity  return_number  number ⋯
+        │ Float64    Float64         Float64  UInt16     UInt8          UInt8  ⋯
+────────┼───────────────────────────────────────────────────────────────────────
+      1 │ 1.44013e6       3.75e5      846.66        250              0         ⋯
+      2 │ 1.44012e6       3.75e5      846.55        245              0
+      3 │ 1.44011e6       3.75001e5   846.44        239              0
+      4 │ 1.4401e6   375001.0         846.32        251              0
+      5 │ 1.44009e6       3.75001e5   846.21        229              0         ⋯
+      6 │ 1.44009e6       3.75002e5   846.1         249              0
+      7 │ 1.44008e6       3.75002e5   846.0         189              0
+      8 │ 1.44007e6       3.75002e5   845.9         250              0
 ```

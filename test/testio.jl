@@ -1,9 +1,10 @@
-using FileIO
-using LazIO
-using LasIO
-using Test
-using Tables
 using Dates
+using FileIO
+using GeoInterface
+using LasIO
+using LazIO
+using Tables
+using Test
 
 workdir = @__DIR__
 lasio_testdir = joinpath(dirname(pathof(LasIO)), "..", "test")
@@ -22,13 +23,13 @@ header, pointdata_all = load(testfile)
     @test header.x_scale == 0.01
     @test header.y_max == 379999.99
     @test header.header_size == 227
-    @test LazIO.boundingbox(header) == (xmin = 1.44e6, ymin = 375000.03, zmin = 832.1800000000001, xmax = 1.44499996e6, ymax = 379999.99, zmax = 972.6700000000001)
+    @test LazIO.boundingbox(header) == (xmin=1.44e6, ymin=375000.03, zmin=832.1800000000001, xmax=1.44499996e6, ymax=379999.99, zmax=972.6700000000001)
     @test LazIO.loadheader(testfile) isa LasIO.LasHeader
 end
 
 @testset "Range indexing" begin
     _, pointdata_276 = load(testfile, range=276)
-    _, pointdata_array = load(testfile, range=[1,276,277,497536])
+    _, pointdata_array = load(testfile, range=[1, 276, 277, 497536])
     _, pointdata_colon = load(testfile, range=:)
 
     @test pointdata_all[1] == pointdata_colon[1] == pointdata_array[1]
@@ -36,16 +37,18 @@ end
     @test pointdata_all[end] == pointdata_colon[end] == pointdata_array[end]
 end
 
-@testset "LazDataSet" begin
+@testset "Dataset" begin
     ds = LazIO.open(testfile_str)
-    @test ds isa LazIO.LazDataset
-    @test first(ds) isa LazIO.LazPoint
+    @test ds isa LazIO.Dataset
+    @test first(ds) isa LazIO.Point0
     @inferred first(ds)
-    @test LazIO.boundingbox(ds) == (xmin = 1.44e6, ymin = 375000.03, zmin = 832.1800000000001, xmax = 1.44499996e6, ymax = 379999.99, zmax = 972.6700000000001)
-    @test return_number(first(ds)) == 0x00
-    @test number_of_returns(first(ds)) == 0x00
-    @test scan_direction(first(ds)) == false
-    @test edge_of_flight_line(first(ds)) == false
+    @inferred ds[1]
+    @inferred collect(ds)
+    @test LazIO.boundingbox(ds) == (xmin=1.44e6, ymin=375000.03, zmin=832.1800000000001, xmax=1.44499996e6, ymax=379999.99, zmax=972.6700000000001)
+    @test first(ds).return_number == 0x00
+    @test first(ds).number_of_returns == 0x00
+    @test first(ds).scan_direction == false
+    @test first(ds).edge_of_flight_line == false
     close(ds)
 end
 
@@ -53,45 +56,44 @@ end
     ds = LazIO.open(testfile_str)
     p = first(ds)
 
-    @test return_number(p) == 0
-    @test number_of_returns(p) == 0
-    @test scan_direction(p) == 0
-    @test edge_of_flight_line(p) == 0
+    @test p.return_number == 0
+    @test p.number_of_returns == 0
+    @test p.scan_direction == 0
+    @test p.edge_of_flight_line == 0
 
-    @test classification(p) == 2
-    @test synthetic(p) == false
-    @test key_point(p) == false
-    @test withheld(p) == false
+    @test p.classification == 2
+    @test p.synthetic == false
+    @test p.key_point == false
+    @test p.withheld == false
 end
 
 @testset "Table interface" begin
     ds = LazIO.open(testfile_str)
-    @test Tables.istable(LazIO.LazDataset)
-    @test Tables.rowaccess(LazIO.LazDataset)
-    @test first(ds) isa LazIO.LazPoint
+    @test Tables.istable(LazIO.Dataset)
+    @test Tables.rowaccess(LazIO.Dataset)
+    @test first(ds) isa LazIO.Point0
     @inferred first(Tables.rows(ds))
 
     LazIO.write("test_table.laz", ds, LazIO.bounds(ds), scalex=0.1)
     close(ds)
 
     manual_fn = "test_table_manual.laz"
-    table = (X = [11000.01, 12000., 32000.],
-             Y = [11000., 12000., 32000.],
-             Z = [11000., 12000., 32000.01],
-             classification = ["ground", "test", "unclassified"],
-             gps_time = fill(now(), 3),
-             return_number = [1,2,1],
-             number_of_returns = [1,2,3])
-    bounds = (min_x = 11000.01, max_x = 32000., min_y = 11000., max_y = 32000., min_z = 11000., max_z = 32000.01)
+    table = (x=[11000.01, 12000.0, 32000.0],
+        y=[11000.0, 12000.0, 32000.0],
+        z=[11000.0, 12000.0, 32000.01],
+        classification=["ground", "test", "unclassified"],
+        gps_time=fill(now(), 3),
+        return_number=[1, 2, 1],
+        number_of_returns=[1, 2, 3])
+    bounds = (min_x=11000.01, max_x=32000.0, min_y=11000.0, max_y=32000.0, min_z=11000.0, max_z=32000.01)
     LazIO.write(manual_fn, table, bounds, scalex=0.01, system_identifier=LazIO.writestring("Laser shooter, pew pew!", 32))
 
     ds = LazIO.open(manual_fn)
 
     @test LazIO.readstring(ds.header.system_identifier) == "Laser shooter, pew pew!"
     @test length(ds) == 3
-    @test first(ds).X == 1100001
-    @test muladd(first(ds).X, ds.header.x_scale_factor, ds.header.x_offset) ≈ 11000.01
-    @test LasIO.classification(first(ds)) == LazIO.classes.ground
+    @test first(ds).x == 11000.01
+    @test first(ds).classification == LazIO.classes.ground
 end
 
 @testset "Writing" begin
@@ -113,7 +115,7 @@ end
     LazIO.@check writer[] LazIO.laszip_open_writer(writer[], laz_out, Cint(1))
 
     # read the first point
-    point_ptr = Ref{Ptr{LazIO.LazPoint}}(C_NULL)
+    point_ptr = Ref{Ptr{LazIO.RawPoint}}(C_NULL)
     LazIO.@check point_ptr[] LazIO.laszip_get_point_pointer(reader[], point_ptr)
     LazIO.@check reader[] LazIO.laszip_read_point(reader[])
 
@@ -145,7 +147,7 @@ end
     ds = LazIO.open(laz_out)
     @test ds.header.number_of_point_records === UInt32(1)
     @test length(ds) === 1
-    @test first(ds).classification === 0x05
+    @test first(ds).classification == 5
     close(ds)
     rm(laz_out)
 end
@@ -156,7 +158,7 @@ end
 
     LazIO.write(laz_stream_out, ds) do io
         for p in ds
-            LazIO.writepoint(io, p)
+            LazIO.writepoint(io, p, ds.header)
         end
     end
 
@@ -167,9 +169,9 @@ end
     p2 = first(ds_out)
     header1 = ds.header
     header2 = ds_out.header
-    @test p1.X === p2.X
-    @test p1.Y === p2.Y
-    @test p1.Z === p2.Z
+    @test p1.x === p2.x
+    @test p1.y === p2.y
+    @test p1.z === p2.z
     @test p1.intensity === p2.intensity
     @test header1.number_of_point_records === header2.number_of_point_records
 
@@ -184,7 +186,7 @@ end
 
     LazIO.write(laz_stream_out, ds.header) do io
         for p in ds
-            LazIO.writepoint(io, p)
+            LazIO.writepoint(io, p, ds.header)
         end
     end
 
@@ -195,13 +197,21 @@ end
     p2 = first(ds_out)
     header1 = ds.header
     header2 = ds_out.header
-    @test p1.X === p2.X
-    @test p1.Y === p2.Y
-    @test p1.Z === p2.Z
+    @test p1.x === p2.x
+    @test p1.y === p2.y
+    @test p1.z === p2.z
     @test p1.intensity === p2.intensity
     @test header1.number_of_point_records === header2.number_of_point_records
 
     close(ds)
     close(ds_out)
     rm(laz_stream_out)
+end
+
+@testset "GeoInterface" begin
+    ds = LazIO.open(testfile_str)
+    GeoInterface.testgeometry(ds)
+    GeoInterface.testgeometry(ds[1])
+    @test_broken GeoInterface.testfeature(ds[1])
+    @test_broken GeoInterface.testfeaturecollection(ds)
 end

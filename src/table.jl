@@ -1,12 +1,12 @@
 using Tables
 
-Tables.istable(::Type{<:LazDataset}) = true
-Tables.rowaccess(::Type{<:LazDataset}) = true
-Tables.rows(ds::LazDataset) = ds
+Tables.istable(::Type{<:Dataset}) = true
+Tables.rowaccess(::Type{<:Dataset}) = true
+Tables.rows(ds::Dataset) = ds
 # TODO Only support fields that are there based on las version
-Tables.schema(ds::LazDataset) = Tables.Schema(map(Symbol, fieldnames(LazIO.LazPoint)), Tuple{fieldtypes(LazIO.LazPoint)...})
+Tables.schema(ds::Dataset) = Tables.Schema(map(Symbol, fieldnames(eltype(ds))), Tuple{fieldtypes(eltype(ds))...})
 
-const column_names = (fieldnames(LazPoint)..., :number_of_returns)
+const column_names = fieldnames(Point3)
 
 
 """Determine offset as implemented by LasTools."""
@@ -20,36 +20,49 @@ function determine_offset(min_value, max_value, scale; threshold=10^7)
 end
 
 """Correctly set fields that require conversion or packing."""
-function Base.setproperty!(p::LazPoint, name, value, header)
-    if name == :X && typeof(value) != Int32
+function Base.setproperty!(p::RawPoint, name, value, header)
+    if name == :x && typeof(value) != Int32
         p.X = round(Int32, (value - header.x_offset) / header.x_scale_factor)
-    elseif name == :Y && typeof(value) != Int32
+    elseif name == :y && typeof(value) != Int32
         p.Y = round(Int32, (value - header.y_offset) / header.y_scale_factor)
-    elseif name == :Z && typeof(value) != Int32
+    elseif name == :z && typeof(value) != Int32
         p.Z = round(Int32, (value - header.z_offset) / header.z_scale_factor)
     elseif name == :classification && typeof(value) != UInt8
         classid = get(classes, Symbol(value), user_defined_class)
         p.classification = UInt8(LasIO.withheld(p)) << 7 | UInt8(LasIO.key_point(p)) << 6 | UInt8(LasIO.synthetic(p)) << 5 | UInt8(classid)
+    elseif name == :withheld
+        p.classification = UInt8(value) << 7 | UInt8(LasIO.key_point(p)) << 6 | UInt8(LasIO.synthetic(p)) << 5 | LasIO.classification(p)
+    elseif name == :key_point
+        p.classification = UInt8(LasIO.withheld(p)) << 7 | UInt8(value) << 6 | UInt8(LasIO.synthetic(p)) << 5 | LasIO.classification(p)
+    elseif name == :synthetic
+        p.classification = UInt8(LasIO.withheld(p)) << 7 | UInt8(LasIO.key_point(p)) << 6 | UInt8(value) << 5 | LasIO.classification(p)
     elseif name == :gps_time && typeof(value) != Float64
         p.gps_time = LasIO.gps_time(value)
     elseif name == :return_number
         p.return_number = UInt8(LasIO.edge_of_flight_line(p)) << 7 | UInt8(LasIO.scan_direction(p)) << 6 | LasIO.number_of_returns(p) << 3 | UInt8(value)
     elseif name == :number_of_returns
         p.return_number = UInt8(LasIO.edge_of_flight_line(p)) << 7 | UInt8(LasIO.scan_direction(p)) << 6 | UInt8(value) << 3 | LasIO.return_number(p)
+    elseif name == :scan_direction
+        p.return_number = UInt8(LasIO.edge_of_flight_line(p)) << 7 | UInt8(value) << 6 | LasIO.number_of_returns(p) << 3 | LasIO.return_number(p)
+    elseif name == :edge_of_flight_line
+        p.return_number = UInt8(value) << 7 | UInt8(LasIO.scan_direction(p)) << 6 | LasIO.number_of_returns(p) << 3 | LasIO.return_number(p)
+    elseif name == :point_source_id
+        p.point_source_ID = value
     else
         setproperty!(p, name, value)
     end
 end
 
+# TODO Implement GeoInterface
 function write(fn::AbstractString, table, bbox; scalex=0.01, scaley=0.01, scalez=0.01, kwargs...)
 
     schema = Tables.schema(table)
     isnothing(schema) && error("A Schema is required")
-    all(name in column_names for name in schema.names) || error("Can't map all columns to LazPoint")
+    all(name in column_names for name in schema.names) || error("Can't map all columns to RawPoint")
 
     rows = Tables.rows(table)
 
-    header = LazHeader(;kwargs...)
+    header = LazHeader(; kwargs...)
     header.x_offset = determine_offset(bbox.min_x, bbox.max_x, scalex)
     header.y_offset = determine_offset(bbox.min_y, bbox.max_y, scaley)
     header.z_offset = determine_offset(bbox.min_z, bbox.max_z, scalez)
@@ -57,7 +70,7 @@ function write(fn::AbstractString, table, bbox; scalex=0.01, scaley=0.01, scalez
     header.y_scale_factor = scaley
     header.z_scale_factor = scalez
 
-    p = LazPoint()
+    p = RawPoint()
 
     LazIO.write(fn, header) do io
         for row in rows

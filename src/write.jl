@@ -1,4 +1,4 @@
-function write(f::Function, path::AbstractString, ds::LazIO.LazDataset)
+function write(f::Function, path::AbstractString, ds::LazIO.Dataset)
     reader = ds.filehandle
     # create writer
     writer = Ref{Ptr{Cvoid}}(C_NULL)
@@ -33,8 +33,16 @@ function write(f::Function, path::AbstractString, header::LazIO.LazHeader)
     end
 end
 
-function writepoint(writer::Ptr{Cvoid}, p::LazIO.LazPoint)
+function writepoint(writer::Ptr{Cvoid}, p::LazIO.RawPoint)
     LazIO.@check writer LazIO.laszip_set_point(writer, Ref(p))
     LazIO.@check writer LazIO.laszip_write_point(writer)
     LazIO.@check writer LazIO.laszip_update_inventory(writer)
+end
+
+function writepoint(writer::Ptr{Cvoid}, p::LazIO.Point, header)
+    rp = LazIO.RawPoint()
+    for key in fieldnames(typeof(p))
+        setproperty!(rp, key, getfield(p, key), header)
+    end
+    writepoint(writer, rp)
 end

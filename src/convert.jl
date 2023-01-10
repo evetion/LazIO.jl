@@ -39,7 +39,7 @@ LasHeader(h::LazHeader) =
     )
 
 "ASPRS LAS point data record format 0"
-Base.convert(::Type{LasPoint0}, p::LazPoint) =
+Base.convert(::Type{LasPoint0}, p::RawPoint) =
     LasPoint0(
         p.X,
         p.Y,
@@ -53,7 +53,7 @@ Base.convert(::Type{LasPoint0}, p::LazPoint) =
     )
 
 "ASPRS LAS point data record format 1"
-Base.convert(::Type{LasPoint1}, p::LazPoint) =
+Base.convert(::Type{LasPoint1}, p::RawPoint) =
     LasPoint1(
         p.X,
         p.Y,
@@ -68,7 +68,7 @@ Base.convert(::Type{LasPoint1}, p::LazPoint) =
     )
 
 "ASPRS LAS point data record format 2"
-Base.convert(::Type{LasPoint2}, p::LazPoint) =
+Base.convert(::Type{LasPoint2}, p::RawPoint) =
     LasPoint2(
         p.X,
         p.Y,
@@ -85,7 +85,7 @@ Base.convert(::Type{LasPoint2}, p::LazPoint) =
     )
 
 "ASPRS LAS point data record format 3"
-Base.convert(::Type{LasPoint3}, p::LazPoint) =
+Base.convert(::Type{LasPoint3}, p::RawPoint) =
     LasPoint3(
         p.X,
         p.Y,

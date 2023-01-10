@@ -1,14 +1,13 @@
-using Parameters
-using Dates
+const gps_epoch = Dates.Second(1315964800)
 
-@with_kw mutable struct LazGeoKey
+Base.@kwdef mutable struct LazGeoKey
     key_id::UInt16 = UInt16(0)
     tiff_tag_location::UInt16 = UInt16(0)
     count::UInt16 = UInt16(0)
     value_offset::UInt16 = UInt16(0)
 end
 
-@with_kw mutable struct LazVLR
+Base.@kwdef mutable struct LazVLR
     reserved::UInt16 = UInt16(0)
     user_id::NTuple{16,UInt8} = ntuple(i -> UInt8(0x0), 16)
     record_id::UInt16 = UInt16(0)
@@ -26,7 +25,7 @@ Base.convert(::Type{LasIO.LasVariableLengthRecord}, vlr::LazVLR) =
         unsafe_string(vlr.data, vlr.record_length_after_header)
     )
 
-@with_kw mutable struct LazHeader
+Base.@kwdef mutable struct LazHeader
     file_source_ID::UInt16 = UInt16(0)
     global_encoding::UInt16 = UInt16(0)
     project_ID_GUID_data_1::UInt32 = UInt32(0)
@@ -62,7 +61,7 @@ Base.convert(::Type{LasIO.LasVariableLengthRecord}, vlr::LazVLR) =
     min_y::Float64 = Float64(0.0)
     max_z::Float64 = Float64(0.0)
     min_z::Float64 = Float64(0.0)
-    start_of_waveform_data_packet_record::UInt64  = UInt64(0)
+    start_of_waveform_data_packet_record::UInt64 = UInt64(0)
     start_of_first_extended_variable_length_record::UInt64 = UInt64(0)
     number_of_extended_variable_length_records::UInt32 = UInt32(0)
     extended_number_of_point_records::UInt64 = UInt64(0)
@@ -76,10 +75,10 @@ Base.convert(::Type{LasIO.LasVariableLengthRecord}, vlr::LazVLR) =
 end
 
 function bounds(h::LazHeader)
-    (min_x = h.min_x, max_x = h.max_x, min_y = h.min_y, max_y = h.max_y, min_z = h.min_z, max_z = h.max_z)
+    (min_x=h.min_x, max_x=h.max_x, min_y=h.min_y, max_y=h.max_y, min_z=h.min_z, max_z=h.max_z)
 end
 
-@with_kw mutable struct LazPoint
+Base.@kwdef mutable struct RawPoint
     X::Int32 = Int32(0)
     Y::Int32 = Int32(0)
     Z::Int32 = Int32(0)
@@ -130,45 +129,47 @@ end
     extra_bytes::Ptr{UInt8} = pointer("")
 end
 
-const classes = (created = 0,
-    unclassified = 1,
-    ground = 2,
-    low_vegation = 3,
-    medium_vegation = 4,
-    high_vegetation = 5,
-    building = 6,
-    noise = 7,
-    key_point = 8,
-    water = 9,
-    overlap = 12,)
+const classes = (created=0,
+    unclassified=1,
+    ground=2,
+    low_vegation=3,
+    medium_vegation=4,
+    high_vegetation=5,
+    building=6,
+    noise=7,
+    key_point=8,
+    water=9,
+    overlap=12,)
 const user_defined_class = 31 # actually reserved
-const classes_extended = (created = 0,
-    unclassified = 1,
-    ground = 2,
-    low_vegation = 3,
-    medium_vegation = 4,
-    high_vegetation = 5,
-    building = 6,
-    noise = 7,
-    reserved = 8,
-    water = 9,
-    rail = 10,
-    road = 11,
-    reserved_ = 12,
-    wire_guard = 13,
-    wire_conductor = 14,
-    tower_transmission = 15,
-    wire_construct = 16,
-    bridge = 17,
-    noise_high = 18,)
+const classes_extended = (created=0,
+    unclassified=1,
+    ground=2,
+    low_vegation=3,
+    medium_vegation=4,
+    high_vegetation=5,
+    building=6,
+    noise=7,
+    reserved=8,
+    water=9,
+    rail=10,
+    road=11,
+    reserved_=12,
+    wire_guard=13,
+    wire_conductor=14,
+    tower_transmission=15,
+    wire_construct=16,
+    bridge=17,
+    noise_high=18,)
 const user_defined_class_extended = 64
 
-LasIO.return_number(p::LazIO.LazPoint) = (p.return_number & 0b00000111)
-LasIO.number_of_returns(p::LazIO.LazPoint) = (p.return_number & 0b00111000) >> 3
-LasIO.scan_direction(p::LazIO.LazPoint) = Bool((p.return_number & 0b01000000) >> 6)
-LasIO.edge_of_flight_line(p::LazIO.LazPoint) = Bool((p.return_number & 0b10000000) >> 7)
+LasIO.return_number(p::LazIO.RawPoint) = (p.return_number & 0b00000111)
+LasIO.number_of_returns(p::LazIO.RawPoint) = (p.return_number & 0b00111000) >> 3
+LasIO.scan_direction(p::LazIO.RawPoint) = Bool((p.return_number & 0b01000000) >> 6)
+LasIO.edge_of_flight_line(p::LazIO.RawPoint) = Bool((p.return_number & 0b10000000) >> 7)
 
-LasIO.classification(p::LazIO.LazPoint) = (p.classification & 0b00011111)
-LasIO.synthetic(p::LazIO.LazPoint) = Bool((p.classification & 0b00100000) >> 5)
-LasIO.key_point(p::LazIO.LazPoint) = Bool((p.classification & 0b01000000) >> 6)
-LasIO.withheld(p::LazIO.LazPoint) = Bool((p.classification & 0b10000000) >> 7)
+LasIO.classification(p::LazIO.RawPoint) = (p.classification & 0b00011111)
+LasIO.synthetic(p::LazIO.RawPoint) = Bool((p.classification & 0b00100000) >> 5)
+LasIO.key_point(p::LazIO.RawPoint) = Bool((p.classification & 0b01000000) >> 6)
+LasIO.withheld(p::LazIO.RawPoint) = Bool((p.classification & 0b10000000) >> 7)
+
+Dates.DateTime(p::LazIO.RawPoint) = Dates.unix2datetime(p.gps_time) + gps_epoch

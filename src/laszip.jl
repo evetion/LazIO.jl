@@ -317,7 +317,7 @@ function laszip_get_header_pointer(pointer::Ptr{Cvoid}, header_pointer)
 end
 
 function laszip_get_point_pointer(pointer::Ptr{Cvoid}, point_pointer)
-    ccall((:laszip_get_point_pointer, laszip), Int32, (Ptr{Cvoid}, Ref{Ptr{LazPoint}}), pointer, point_pointer)
+    ccall((:laszip_get_point_pointer, laszip), Int32, (Ptr{Cvoid}, Ref{Ptr{RawPoint}}), pointer, point_pointer)
 end
 
 function laszip_get_point_count(pointer::Ptr{Cvoid}, count)
@@ -341,7 +341,7 @@ end
 # end
 
 function laszip_set_point(pointer::Ptr{Cvoid}, point)
-    ccall((:laszip_set_point, laszip), Int32, (Ptr{Cvoid}, Ptr{LazPoint}), pointer, point)
+    ccall((:laszip_set_point, laszip), Int32, (Ptr{Cvoid}, Ptr{RawPoint}), pointer, point)
 end
 
 # function laszip_set_coordinates(pointer::Ptr{Cvoid}, coordinates)
