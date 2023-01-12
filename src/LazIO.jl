@@ -6,6 +6,7 @@ using Extents
 using FileIO
 using FixedPointNumbers
 using GeoInterface
+using GeoInterfaceRecipes
 using LasIO
 using LASzip_jll
 using Libdl
