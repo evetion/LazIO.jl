@@ -69,6 +69,28 @@ function Base.getindex(ds::Dataset, i::Integer)
     eltype(ds)(unsafe_load(ds.point), CoordinateTransformations.AffineMap(ds))
 end
 
+function Base.getindex(ds::Dataset, i::UnitRange{<:Integer})
+    out = Vector{eltype(ds)}(undef, length(i))
+    (1 <= i[begin] <= length(ds)) && (1 <= i[end] <= length(ds)) || throw(BoundsError(ds, i))
+    laszip_seek_point(ds.filehandle, i[begin] - 1)
+    for I in eachindex(out)
+        laszip_read_point(ds.filehandle)
+        out[I] = eltype(ds)(unsafe_load(ds.point), CoordinateTransformations.AffineMap(ds))
+    end
+    out
+end
+
+function Base.getindex(ds::Dataset, i::StepRange{<:Integer,<:Integer})
+    out = Vector{eltype(ds)}(undef, length(i))
+    (1 <= i[begin] <= length(ds)) && (1 <= i[end] <= length(ds)) || throw(BoundsError(ds, i))
+    for I in eachindex(out)
+        laszip_seek_point(ds.filehandle, i[I] - 1)
+        laszip_read_point(ds.filehandle)
+        out[I] = eltype(ds)(unsafe_load(ds.point), CoordinateTransformations.AffineMap(ds))
+    end
+    out
+end
+
 Base.eltype(::Dataset{0x00}) = Point0
 Base.eltype(::Dataset{0x01}) = Point1
 Base.eltype(::Dataset{0x02}) = Point2

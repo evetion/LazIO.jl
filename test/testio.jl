@@ -43,6 +43,8 @@ end
     @test first(ds) isa LazIO.Point0
     @inferred first(ds)
     @inferred ds[1]
+    @inferred ds[1:2]
+    @inferred ds[1:2:5]
     @inferred collect(ds)
     @test LazIO.boundingbox(ds) == (xmin=1.44e6, ymin=375000.03, zmin=832.1800000000001, xmax=1.44499996e6, ymax=379999.99, zmax=972.6700000000001)
     @test first(ds).return_number == 0x00
@@ -217,4 +219,20 @@ end
     @test_broken GeoInterface.testfeaturecollection(ds)
 
     @test GeoInterface.z(GeoInterface.getpoint(collect(ds)[1:2], 1)) == 846.66
+end
+
+@testset "Indexing" begin
+    ds = LazIO.open(testfile_str)
+
+    p = ds[3]
+
+    r = 1:3
+    range = ds[r]
+    @test length(range) == length(r)
+    @test range[end] == p
+
+    s = 1:2:5
+    step = ds[s]
+    @test length(step) == length(s)
+    @test step[2] == p
 end
