@@ -26,6 +26,7 @@ GeoInterface.getgeom(::MultiPointTrait, ds::Dataset, i) = ds[i]
 
 # GeoInterface.crs(geomtrait(geom), geom::customgeom)::GeoFormatTypes.GeoFormat
 GeoInterface.extent(::MultiPointTrait, ds::Dataset) = Extent(X=(ds.header.min_x, ds.header.max_x), Y=(ds.header.min_y, ds.header.max_y), Z=(ds.header.min_z, ds.header.max_z))
+GeoInterface.extent(::FeatureCollectionTrait, ds::Dataset) = Extent(X=(ds.header.min_x, ds.header.max_x), Y=(ds.header.min_y, ds.header.max_y), Z=(ds.header.min_z, ds.header.max_z))
 
 GeoInterface.isfeaturecollection(::Type{Dataset}) = true
 GeoInterface.nfeature(::FeatureCollectionTrait, ds::Dataset) = length(ds)
