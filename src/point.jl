@@ -10,6 +10,7 @@ struct Point0 <: Point
     synthetic::Bool
     key_point::Bool
     withheld::Bool
+    scan_angle_rank::Int8
     user_data::UInt8
     point_source_id::UInt16
 end
@@ -25,6 +26,7 @@ function Point0(rp, am)
         synthetic(rp),
         key_point(rp),
         withheld(rp),
+        rp.scan_angle_rank,
         rp.user_data, rp.point_source_ID
     )
 end
@@ -40,6 +42,7 @@ struct Point1 <: Point
     synthetic::Bool
     key_point::Bool
     withheld::Bool
+    scan_angle_rank::Int8
     user_data::UInt8
     point_source_id::UInt16
     gps_time::Dates.DateTime
@@ -56,6 +59,7 @@ function Point1(rp, am)
         synthetic(rp),
         key_point(rp),
         withheld(rp),
+        rp.scan_angle_rank,
         rp.user_data, rp.point_source_ID,
         Dates.DateTime(rp)
     )
@@ -72,6 +76,7 @@ struct Point2 <: Point
     synthetic::Bool
     key_point::Bool
     withheld::Bool
+    scan_angle_rank::Int8
     user_data::UInt8
     point_source_id::UInt16
     r::N0f16
@@ -90,6 +95,7 @@ function Point2(rp, am)
         synthetic(rp),
         key_point(rp),
         withheld(rp),
+        rp.scan_angle_rank,
         rp.user_data, rp.point_source_ID,
         reinterpret(N0f16, rp.rgb[1]),
         reinterpret(N0f16, rp.rgb[2]),
@@ -109,6 +115,7 @@ struct Point3 <: Point
     synthetic::Bool
     key_point::Bool
     withheld::Bool
+    scan_angle_rank::Int8
     user_data::UInt8
     point_source_id::UInt16
     gps_time::Dates.DateTime
@@ -128,6 +135,7 @@ function Point3(rp, am)
         synthetic(rp),
         key_point(rp),
         withheld(rp),
+        rp.scan_angle_rank,
         rp.user_data, rp.point_source_ID,
         Dates.DateTime(rp),
         reinterpret(N0f16, rp.rgb[1]),
