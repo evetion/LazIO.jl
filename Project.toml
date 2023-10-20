@@ -1,7 +1,7 @@
 name = "LazIO"
 uuid = "c3605908-9f0f-11e8-0a72-0d361c15a277"
 authors = ["Maarten Pronk <git@evetion.nl>"]
-version = "0.4.2"
+version = "0.4.3"
 
 [deps]
 CoordinateTransformations = "150eb455-5306-5404-9cee-2592286d6298"
