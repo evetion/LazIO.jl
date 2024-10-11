@@ -13,6 +13,8 @@ function header(ds::Dataset)
     ds.header
 end
 
+Base.lastindex(ds::Dataset) = length(ds)
+
 function bounds(ds::Dataset)
     bounds(header(ds))
 end
@@ -34,6 +36,7 @@ function open(f::AbstractString)
     point_ptr = Ref{Ptr{RawPoint}}()
     @check laszip_reader[] laszip_get_point_pointer(laszip_reader[], point_ptr)
 
+    header.point_data_format > 3 && @warn "The LAS 1.4+ format is not fully supported yet."
     Dataset{header.point_data_format}(f, laszip_reader[], header, point_ptr[])
 end
 
@@ -95,6 +98,7 @@ Base.eltype(::Dataset{0x00}) = Point0
 Base.eltype(::Dataset{0x01}) = Point1
 Base.eltype(::Dataset{0x02}) = Point2
 Base.eltype(::Dataset{0x03}) = Point3
+Base.eltype(::Dataset) = PointX
 Base.length(ds::Dataset) = Int(max(ds.header.number_of_point_records, ds.header.extended_number_of_point_records))
 
 function Base.close(ds::Dataset)

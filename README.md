@@ -48,4 +48,14 @@ julia> DataFrame(ds)
       6 │ 1.44009e6       3.75002e5   846.1         249              0
       7 │ 1.44008e6       3.75002e5   846.0         189              0
       8 │ 1.44007e6       3.75002e5   845.9         250              0
+
 ```
+
+Plotting is done via either the Plots, or Makie ecosystem. The latter is recommended for large datasets.
+
+```julia
+julia> # using Plots
+julia> using GLMakie
+julia> plot(ds)
+```
+![](plot-fs8.png)

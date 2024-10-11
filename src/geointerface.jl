@@ -7,6 +7,7 @@ GeoInterface.trait(::Point) = FeatureTrait()
 GeoInterface.ncoord(::PointTrait, p::Point) = 3
 GeoInterface.getcoord(::PointTrait, p::Point) = p.geometry
 GeoInterface.getcoord(::PointTrait, p::Point, i) = p.geometry[i]
+GeoInterface.coordinates(::PointTrait, p::Point) = p.geometry
 
 GeoInterface.x(::PointTrait, p::Point) = p.geometry[1]
 GeoInterface.y(::PointTrait, p::Point) = p.geometry[2]
@@ -19,10 +20,11 @@ GeoInterface.geometry(feat::Point) = feat.geometry
 GeoInterface.isgeometry(::Type{<:Dataset}) = true
 GeoInterface.geomtrait(::Dataset) = MultiPointTrait()
 GeoInterface.trait(::Dataset) = FeatureCollectionTrait()
-GeoInterface.ncoord(::MultiPointTrait, ::LazIO.Dataset) = 2
+GeoInterface.ncoord(::MultiPointTrait, ::LazIO.Dataset) = 3
 GeoInterface.ngeom(::MultiPointTrait, ds::Dataset) = length(ds)
 GeoInterface.getgeom(::MultiPointTrait, ds::Dataset) = ds
 GeoInterface.getgeom(::MultiPointTrait, ds::Dataset, i) = ds[i]
+GeoInterface.coordinates(::MultiPointTrait, ds::Dataset) = (p.geometry for p in ds)
 
 # GeoInterface.crs(geomtrait(geom), geom::customgeom)::GeoFormatTypes.GeoFormat
 GeoInterface.extent(::MultiPointTrait, ds::Dataset) = Extent(X=(ds.header.min_x, ds.header.max_x), Y=(ds.header.min_y, ds.header.max_y), Z=(ds.header.min_z, ds.header.max_z))
@@ -36,9 +38,7 @@ GeoInterface.geometrycolumns(::Dataset) = (:geometry,)
 
 GeoInterface.isgeometry(::Type{<:AbstractVector{<:Point}}) = true
 GeoInterface.geomtrait(::AbstractVector{<:Point}) = MultiPointTrait()
+GeoInterface.ncoord(::MultiPointTrait, ::AbstractVector{<:Point}) = 3
 GeoInterface.ngeom(::MultiPointTrait, ds::AbstractVector{<:Point}) = length(ds)
 GeoInterface.getgeom(::MultiPointTrait, ds::AbstractVector{<:Point}) = ds
 GeoInterface.getgeom(::MultiPointTrait, ds::AbstractVector{<:Point}, i) = ds[i]
-
-GeoInterfaceRecipes.@enable_geo_plots LazIO.Dataset
-GeoInterfaceRecipes.@enable_geo_plots LazIO.Point
