@@ -177,3 +177,14 @@ function PointX(rp, am)
         Dates.DateTime(rp),
     )
 end
+
+LasIO.intensity(p::Point) = p.intensity
+LasIO.return_number(p::Point) = p.return_number
+LasIO.number_of_returns(p::Point) = p.number_of_returns
+LasIO.scan_direction(p::Point) = p.scan_direction
+LasIO.edge_of_flight_line(p::Point) = p.edge_of_flight_line
+LasIO.classification(p::Point) = p.classification
+LasIO.synthetic(p::Point) = p.synthetic
+LasIO.key_point(p::Point) = p.key_point
+LasIO.withheld(p::Point) = p.withheld
+Dates.DateTime(p::Point) = p.gps_time
