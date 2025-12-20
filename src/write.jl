@@ -33,14 +33,14 @@ function write(f::Function, path::AbstractString, header::LazIO.LazHeader)
     end
 end
 
-function writepoint(writer::Ptr{Cvoid}, p::LazIO.RawPoint)
+function writepoint(writer::Ptr{Cvoid}, p::LazIO.AbstractRawPoint)
     LazIO.@check writer LazIO.laszip_set_point(writer, Ref(p))
     LazIO.@check writer LazIO.laszip_write_point(writer)
     LazIO.@check writer LazIO.laszip_update_inventory(writer)
 end
 
 function writepoint(writer::Ptr{Cvoid}, p::LazIO.Point, header)
-    rp = LazIO.RawPoint()
+    rp = LazIO.MutableRawPoint()
     for key in fieldnames(typeof(p))
         setproperty!(rp, key, getfield(p, key), header)
     end

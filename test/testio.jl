@@ -5,6 +5,7 @@ using LasIO
 using LazIO
 using Tables
 using Test
+using Setfield
 
 workdir = @__DIR__
 lasio_testdir = joinpath(dirname(pathof(LasIO)), "..", "test")
@@ -124,7 +125,7 @@ end
 
     # modify point
     p = unsafe_load(point_ptr[])
-    p.classification = LasIO.raw_classification(
+    p = @set p.classification = LasIO.raw_classification(
         0x05,
         Bool((p.classification & 0b00100000) >> 5),
         Bool((p.classification & 0b01000000) >> 6),

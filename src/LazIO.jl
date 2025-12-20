@@ -12,6 +12,7 @@ using Libdl
 using LinearAlgebra
 using StaticArrays
 using UUIDs
+using Setfield
 
 # Module initialization function
 function __init__()

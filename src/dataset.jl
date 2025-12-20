@@ -3,7 +3,7 @@ struct Dataset{Version}
     filehandle::Ptr{Cvoid}
     header::LazHeader  # this enables iterating without unsafe_load everytime
     point::Ptr{RawPoint}
-    am::CoordinateTransformations.AffineMap
+    am::CoordinateTransformations.AffineMap{LinearAlgebra.Diagonal{Float64,StaticArraysCore.SVector{3,Float64}},StaticArraysCore.SVector{3,Float64}}
 end
 
 function Base.show(io::IO, ds::Dataset{Version}) where {Version}

@@ -20,7 +20,7 @@ function determine_offset(min_value, max_value, scale; threshold=10^7)
 end
 
 """Correctly set fields that require conversion or packing."""
-function Base.setproperty!(p::RawPoint, name, value, header)
+function Base.setproperty!(p::MutableRawPoint, name, value, header)
     if name == :x && typeof(value) != Int32
         p.X = round(Int32, (value - header.x_offset) / header.x_scale_factor)
     elseif name == :y && typeof(value) != Int32
@@ -74,7 +74,7 @@ function write(fn::AbstractString, table, bbox; scalex=0.01, scaley=0.01, scalez
     header.y_scale_factor = scaley
     header.z_scale_factor = scalez
 
-    p = RawPoint()
+    p = MutableRawPoint()
 
     LazIO.write(fn, header) do io
         for row in rows
