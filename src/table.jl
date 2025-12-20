@@ -66,13 +66,13 @@ function write(fn::AbstractString, table, bbox; scalex=0.01, scaley=0.01, scalez
 
     rows = Tables.rows(table)
 
-    header = LazHeader(; kwargs...)
-    header.x_offset = determine_offset(bbox.min_x, bbox.max_x, scalex)
-    header.y_offset = determine_offset(bbox.min_y, bbox.max_y, scaley)
-    header.z_offset = determine_offset(bbox.min_z, bbox.max_z, scalez)
-    header.x_scale_factor = scalex
-    header.y_scale_factor = scaley
-    header.z_scale_factor = scalez
+    x_offset = determine_offset(bbox.min_x, bbox.max_x, scalex)
+    y_offset = determine_offset(bbox.min_y, bbox.max_y, scaley)
+    z_offset = determine_offset(bbox.min_z, bbox.max_z, scalez)
+    x_scale_factor = scalex
+    y_scale_factor = scaley
+    z_scale_factor = scalez
+    header = LazHeader(; x_offset, y_offset, z_offset, x_scale_factor, y_scale_factor, z_scale_factor, kwargs...)
 
     p = MutableRawPoint()
 
