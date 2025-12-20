@@ -46,6 +46,7 @@ end
     @inferred ds[1:2]
     @inferred ds[1:2:5]
     @inferred collect(ds)
+    @time collect(ds)
     @test LazIO.boundingbox(ds) == (xmin=1.44e6, ymin=375000.03, zmin=832.1800000000001, xmax=1.44499996e6, ymax=379999.99, zmax=972.6700000000001)
     @test first(ds).return_number == 0x00
     @test first(ds).number_of_returns == 0x00

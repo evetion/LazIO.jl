@@ -13,7 +13,7 @@ Base.@kwdef mutable struct LazVLR
     record_id::UInt16 = UInt16(0)
     record_length_after_header::UInt16 = UInt16(0)
     description::NTuple{32,UInt8} = ntuple(i -> UInt8(0x0), 32)
-    data::Ptr{UInt8} = pointer("")
+    data::Ptr{UInt8} = C_NULL
 end
 
 Base.convert(::Type{LasIO.LasVariableLengthRecord}, vlr::LazVLR) =
@@ -68,10 +68,10 @@ Base.@kwdef mutable struct LazHeader
     extended_number_of_points_by_return::NTuple{15,UInt64} = ntuple(i -> UInt64(0), 15)
     # extended_number_of_points_by_return::Array{UInt64, 1} = Array{UInt64, 1}(zeros(0, 15))
     user_data_in_header_size::UInt32 = UInt32(0)
-    user_data_in_header::Ptr{UInt8} = pointer("")
-    vlrs::Ptr{LazVLR} = pointer("")
+    user_data_in_header::Ptr{UInt8} = C_NULL
+    vlrs::Ptr{LazVLR} = C_NULL
     user_data_after_header_size::UInt32 = UInt32(0)
-    user_data_after_header::Ptr{UInt8} = pointer("")
+    user_data_after_header::Ptr{UInt8} = C_NULL
 end
 
 function bounds(h::LazHeader)
@@ -126,7 +126,7 @@ Base.@kwdef mutable struct RawPoint
     rgb::NTuple{4,UInt16} = ntuple(i -> UInt16(0), 4)
     wave_packet::NTuple{29,UInt8} = ntuple(i -> UInt8(0), 29)
     num_extra_bytes::Int32 = Int32(0)
-    extra_bytes::Ptr{UInt8} = pointer("")
+    extra_bytes::Ptr{UInt8} = C_NULL
 end
 
 const classes = (created=0,

@@ -51,7 +51,7 @@ using LazIO
         rgb=ntuple(i -> UInt16(65535), 4),
         wave_packet=ntuple(i -> UInt8(255), 29),
         num_extra_bytes=Int32(24244),
-        extra_bytes=pointer("")
+        extra_bytes=C_NULL
     )
 
     las0 = convert(LazIO.LasPoint0, lazp)
