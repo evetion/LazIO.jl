@@ -296,159 +296,159 @@ function laszip_create(pointer::Ref{Ptr{Cvoid}})
     ccall((:laszip_create, laszip), Int32, (Ptr{Ptr{Cvoid}},), pointer)
 end
 
-function laszip_get_error(pointer::Ptr{Cvoid}, error)
+function laszip_get_error(pointer, error)
     ccall((:laszip_get_error, laszip), Int32, (Ptr{Cvoid}, Ptr{Cstring}), pointer, error)
 end
 
-function laszip_get_warning(pointer::Ptr{Cvoid}, warning)
+function laszip_get_warning(pointer, warning)
     ccall((:laszip_get_warning, laszip), Int32, (Ptr{Cvoid}, Ptr{Cstring}), pointer, warning)
 end
 
-function laszip_clean(pointer::Ptr{Cvoid})
+function laszip_clean(pointer)
     ccall((:laszip_clean, laszip), Int32, (Ptr{Cvoid},), pointer)
 end
 
-function laszip_destroy(pointer::Ptr{Cvoid})
+function laszip_destroy(pointer)
     ccall((:laszip_destroy, laszip), Int32, (Ptr{Cvoid},), pointer)
 end
 
-function laszip_get_header_pointer(pointer::Ptr{Cvoid}, header_pointer)
-    ccall((:laszip_get_header_pointer, laszip), Int32, (Ptr{Cvoid}, Ref{Ptr{LazHeader}}), pointer, header_pointer)
+function laszip_get_header_pointer(pointer, header_pointer)
+    ccall((:laszip_get_header_pointer, laszip), Int32, (Ptr{Cvoid}, Ptr{Ptr{LazHeader}}), pointer, header_pointer)
 end
 
-function laszip_get_point_pointer(pointer::Ptr{Cvoid}, point_pointer)
-    ccall((:laszip_get_point_pointer, laszip), Int32, (Ptr{Cvoid}, Ref{Ptr{RawPoint}}), pointer, point_pointer)
+function laszip_get_point_pointer(pointer, point_pointer)
+    ccall((:laszip_get_point_pointer, laszip), Int32, (Ptr{Cvoid}, Ptr{Ptr{RawPoint}}), pointer, point_pointer)
 end
 
-function laszip_get_point_count(pointer::Ptr{Cvoid}, count)
+function laszip_get_point_count(pointer, count)
     ccall((:laszip_get_point_count, laszip), Int32, (Ptr{Cvoid}, Ptr{Int64}), pointer, count)
 end
 
-function laszip_set_header(pointer::Ptr{Cvoid}, header)
+function laszip_set_header(pointer, header)
     ccall((:laszip_set_header, laszip), Int32, (Ptr{Cvoid}, Ptr{LazHeader}), pointer, header)
 end
 
-# function laszip_set_point_type_and_size(pointer::Ptr{Cvoid}, point_type::UInt8, point_size::UInt16)
+# function laszip_set_point_type_and_size(pointer, point_type::UInt8, point_size::UInt16)
 #     ccall((:laszip_set_point_type_and_size, laszip), Int32, (Ptr{Cvoid}, UInt8, UInt16), pointer, point_type, point_size)
 # end
 
-# function laszip_check_for_integer_overflow(pointer::Ptr{Cvoid})
+# function laszip_check_for_integer_overflow(pointer)
 #     ccall((:laszip_check_for_integer_overflow, laszip), Int32, (Ptr{Cvoid},), pointer)
 # end
 
-# function laszip_auto_offset(pointer::Ptr{Cvoid})
+# function laszip_auto_offset(pointer)
 #     ccall((:laszip_auto_offset, laszip), Int32, (Ptr{Cvoid},), pointer)
 # end
 
-function laszip_set_point(pointer::Ptr{Cvoid}, point)
-    ccall((:laszip_set_point, laszip), Int32, (Ptr{Cvoid}, Ptr{RawPoint}), pointer, point)
+function laszip_set_point(pointer, point::Ref{T}) where T
+    ccall((:laszip_set_point, laszip), Int32, (Ptr{Cvoid}, Ptr{T}), pointer, point)
 end
 
-# function laszip_set_coordinates(pointer::Ptr{Cvoid}, coordinates)
+# function laszip_set_coordinates(pointer, coordinates)
 #     ccall((:laszip_set_coordinates, laszip), Int32, (Ptr{Cvoid}, Ptr{Float64}), pointer, coordinates)
 # end
 
-# function laszip_get_coordinates(pointer::Ptr{Cvoid}, coordinates)
+# function laszip_get_coordinates(pointer, coordinates)
 #     ccall((:laszip_get_coordinates, laszip), Int32, (Ptr{Cvoid}, Ptr{Float64}), pointer, coordinates)
 # end
 
-# function laszip_set_geokeys(pointer::Ptr{Cvoid}, number::UInt32, key_entries)
+# function laszip_set_geokeys(pointer, number::UInt32, key_entries)
 #     ccall((:laszip_set_geokeys, laszip), Int32, (Ptr{Cvoid}, UInt32, Ptr{Cvoid}), pointer, number, key_entries)
 # end
 
-# function laszip_set_geodouble_params(pointer::Ptr{Cvoid}, number::UInt32, geodouble_params)
+# function laszip_set_geodouble_params(pointer, number::UInt32, geodouble_params)
 #     ccall((:laszip_set_geodouble_params, laszip), Int32, (Ptr{Cvoid}, UInt32, Ptr{Float64}), pointer, number, geodouble_params)
 # end
 
-# function laszip_set_geoascii_params(pointer::Ptr{Cvoid}, number::UInt32, geoascii_params)
+# function laszip_set_geoascii_params(pointer, number::UInt32, geoascii_params)
 #     ccall((:laszip_set_geoascii_params, laszip), Int32, (Ptr{Cvoid}, UInt32, Ptr{UInt8}), pointer, number, geoascii_params)
 # end
 
-# function laszip_add_attribute(pointer::Ptr{Cvoid}, _type::UInt32, name, description, scale::Float64, offset::Float64)
+# function laszip_add_attribute(pointer, _type::UInt32, name, description, scale::Float64, offset::Float64)
 #     ccall((:laszip_add_attribute, laszip), Int32, (Ptr{Cvoid}, UInt32, Ptr{UInt8}, Ptr{UInt8}, Float64, Float64), pointer, _type, name, description, scale, offset)
 # end
 
-# function laszip_add_vlr(pointer::Ptr{Cvoid}, user_id, record_id::UInt16, record_length_after_header::UInt16, description, data)
+# function laszip_add_vlr(pointer, user_id, record_id::UInt16, record_length_after_header::UInt16, description, data)
 #     ccall((:laszip_add_vlr, laszip), Int32, (Ptr{Cvoid}, Ptr{UInt8}, UInt16, UInt16, Ptr{UInt8}, Ptr{UInt8}), pointer, user_id, record_id, record_length_after_header, description, data)
 # end
 
-# function laszip_remove_vlr(pointer::Ptr{Cvoid}, user_id, record_id::UInt16)
+# function laszip_remove_vlr(pointer, user_id, record_id::UInt16)
 #     ccall((:laszip_remove_vlr, laszip), Int32, (Ptr{Cvoid}, Ptr{UInt8}, UInt16), pointer, user_id, record_id)
 # end
 
-# function laszip_create_spatial_index(pointer::Ptr{Cvoid}, create::Cint, append::Cint)
+# function laszip_create_spatial_index(pointer, create::Cint, append::Cint)
 #     ccall((:laszip_create_spatial_index, laszip), Int32, (Ptr{Cvoid}, Cint, Cint), pointer, create, append)
 # end
 
-# function laszip_preserve_generating_software(pointer::Ptr{Cvoid}, preserve::Cint)
+# function laszip_preserve_generating_software(pointer, preserve::Cint)
 #     ccall((:laszip_preserve_generating_software, laszip), Int32, (Ptr{Cvoid}, Cint), pointer, preserve)
 # end
 
-# function laszip_request_native_extension(pointer::Ptr{Cvoid}, request::Cint)
+# function laszip_request_native_extension(pointer, request::Cint)
 #     ccall((:laszip_request_native_extension, laszip), Int32, (Ptr{Cvoid}, Cint), pointer, request)
 # end
 
-# function laszip_request_compatibility_mode(pointer::Ptr{Cvoid}, request::Cint)
+# function laszip_request_compatibility_mode(pointer, request::Cint)
 #     ccall((:laszip_request_compatibility_mode, laszip), Int32, (Ptr{Cvoid}, Cint), pointer, request)
 # end
 
-# function laszip_set_chunk_size(pointer::Ptr{Cvoid}, chunk_size::UInt32)
+# function laszip_set_chunk_size(pointer, chunk_size::UInt32)
 #     ccall((:laszip_set_chunk_size, laszip), Int32, (Ptr{Cvoid}, UInt32), pointer, chunk_size)
 # end
 
-function laszip_open_writer(pointer::Ptr{Cvoid}, file_name, compress::Cint)
+function laszip_open_writer(pointer, file_name, compress::Cint)
     ccall((:laszip_open_writer, laszip), Int32, (Ptr{Cvoid}, Ptr{UInt8}, Cint), pointer, file_name, compress)
 end
 
-function laszip_write_point(pointer::Ptr{Cvoid})
+function laszip_write_point(pointer)
     ccall((:laszip_write_point, laszip), Int32, (Ptr{Cvoid},), pointer)
 end
 
-# function laszip_write_indexed_point(pointer::Ptr{Cvoid})
+# function laszip_write_indexed_point(pointer)
 #     ccall((:laszip_write_indexed_point, laszip), Int32, (Ptr{Cvoid},), pointer)
 # end
 
-function laszip_update_inventory(pointer::Ptr{Cvoid})
+function laszip_update_inventory(pointer)
     ccall((:laszip_update_inventory, laszip), Int32, (Ptr{Cvoid},), pointer)
 end
 
-function laszip_close_writer(pointer::Ptr{Cvoid})
+function laszip_close_writer(pointer)
     ccall((:laszip_close_writer, laszip), Int32, (Ptr{Cvoid},), pointer)
 end
 
-# function laszip_exploit_spatial_index(pointer::Ptr{Cvoid}, exploit::Cint)
+# function laszip_exploit_spatial_index(pointer, exploit::Cint)
 #     ccall((:laszip_exploit_spatial_index, laszip), Int32, (Ptr{Cvoid}, Cint), pointer, exploit)
 # end
 
-# function laszip_decompress_selective(pointer::Ptr{Cvoid}, decompress_selective::UInt32)
+# function laszip_decompress_selective(pointer, decompress_selective::UInt32)
 #     ccall((:laszip_decompress_selective, laszip), Int32, (Ptr{Cvoid}, UInt32), pointer, decompress_selective)
 # end
 
-function laszip_open_reader(pointer::Ptr{Cvoid}, file_name, is_compressed)
+function laszip_open_reader(pointer, file_name, is_compressed)
     ccall((:laszip_open_reader, laszip), Int32, (Ptr{Cvoid}, Ptr{UInt8}, Ptr{Cint}), pointer, file_name, is_compressed)
 end
 
-# function laszip_has_spatial_index(pointer::Ptr{Cvoid}, is_indexed, is_appended)
+# function laszip_has_spatial_index(pointer, is_indexed, is_appended)
 #     ccall((:laszip_has_spatial_index, laszip), Int32, (Ptr{Cvoid}, Ptr{Cint}, Ptr{Cint}), pointer, is_indexed, is_appended)
 # end
 
-# function laszip_inside_rectangle(pointer::Ptr{Cvoid}, min_x::Float64, min_y::Float64, max_x::Float64, max_y::Float64, is_empty)
+# function laszip_inside_rectangle(pointer, min_x::Float64, min_y::Float64, max_x::Float64, max_y::Float64, is_empty)
 #     ccall((:laszip_inside_rectangle, laszip), Int32, (Ptr{Cvoid}, Float64, Float64, Float64, Float64, Ptr{Cint}), pointer, min_x, min_y, max_x, max_y, is_empty)
 # end
 
-function laszip_seek_point(pointer::Ptr{Cvoid}, index::Int64)
+function laszip_seek_point(pointer, index::Int64)
     ccall((:laszip_seek_point, laszip), Int32, (Ptr{Cvoid}, Int64), pointer, index)
 end
-laszip_seek_point(pointer::Ptr{Cvoid}, index::Int32) = laszip_seek_point(pointer, convert(Int64, index))
+laszip_seek_point(pointer, index::Int32) = laszip_seek_point(pointer, convert(Int64, index))
 
-function laszip_read_point(pointer::Ptr{Cvoid})
+function laszip_read_point(pointer)
     ccall((:laszip_read_point, laszip), Int32, (Ptr{Cvoid},), pointer)
 end
 
-# function laszip_read_inside_point(pointer::Ptr{Cvoid}, is_done)
+# function laszip_read_inside_point(pointer, is_done)
 #     ccall((:laszip_read_inside_point, laszip), Int32, (Ptr{Cvoid}, Ptr{Cint}), pointer, is_done)
 # end
 
-function laszip_close_reader(pointer::Ptr{Cvoid})
+function laszip_close_reader(pointer)
     ccall((:laszip_close_reader, laszip), Int32, (Ptr{Cvoid},), pointer)
 end

@@ -13,7 +13,7 @@ Base.@kwdef mutable struct LazVLR
     record_id::UInt16 = UInt16(0)
     record_length_after_header::UInt16 = UInt16(0)
     description::NTuple{32,UInt8} = ntuple(i -> UInt8(0x0), 32)
-    data::Ptr{UInt8} = pointer("")
+    data::Ptr{UInt8} = C_NULL
 end
 
 Base.convert(::Type{LasIO.LasVariableLengthRecord}, vlr::LazVLR) =
@@ -68,17 +68,18 @@ Base.@kwdef mutable struct LazHeader
     extended_number_of_points_by_return::NTuple{15,UInt64} = ntuple(i -> UInt64(0), 15)
     # extended_number_of_points_by_return::Array{UInt64, 1} = Array{UInt64, 1}(zeros(0, 15))
     user_data_in_header_size::UInt32 = UInt32(0)
-    user_data_in_header::Ptr{UInt8} = pointer("")
-    vlrs::Ptr{LazVLR} = pointer("")
+    user_data_in_header::Ptr{UInt8} = C_NULL
+    vlrs::Ptr{LazVLR} = C_NULL
     user_data_after_header_size::UInt32 = UInt32(0)
-    user_data_after_header::Ptr{UInt8} = pointer("")
+    user_data_after_header::Ptr{UInt8} = C_NULL
 end
 
 function bounds(h::LazHeader)
     (min_x=h.min_x, max_x=h.max_x, min_y=h.min_y, max_y=h.max_y, min_z=h.min_z, max_z=h.max_z)
 end
 
-Base.@kwdef mutable struct RawPoint
+abstract type AbstractRawPoint end
+Base.@kwdef struct RawPoint <: AbstractRawPoint
     X::Int32 = Int32(0)
     Y::Int32 = Int32(0)
     Z::Int32 = Int32(0)
@@ -126,7 +127,58 @@ Base.@kwdef mutable struct RawPoint
     rgb::NTuple{4,UInt16} = ntuple(i -> UInt16(0), 4)
     wave_packet::NTuple{29,UInt8} = ntuple(i -> UInt8(0), 29)
     num_extra_bytes::Int32 = Int32(0)
-    extra_bytes::Ptr{UInt8} = pointer("")
+    extra_bytes::Ptr{UInt8} = C_NULL
+end
+
+Base.@kwdef mutable struct MutableRawPoint <: AbstractRawPoint
+    X::Int32 = Int32(0)
+    Y::Int32 = Int32(0)
+    Z::Int32 = Int32(0)
+    intensity::UInt16 = UInt16(0)
+
+    # Evil types
+    # U8 return_number : 3;
+    # U8 number_of_returns : 3;
+    # U8 scan_direction_flag : 1;
+    # U8 edge_of_flight_line : 1;  8
+    # U8 classification : 5;
+    # U8 synthetic_flag : 1;
+    # U8 keypoint_flag  : 1;
+    # U8 withheld_flag : 1;      8
+    return_number::UInt8 = UInt8(0)
+    # number_of_returns::UInt8 = UInt8(0)
+    # scan_direction_flag::UInt8 = UInt8(0)
+    # edge_of_flight_line::UInt8 = UInt8(0)
+    classification::UInt8 = UInt8(0)
+    # synthetic_flag::UInt8 = UInt8(0)
+    # keypoint_flag::UInt8 = UInt8(0)
+    # withheld_flag::UInt8 = UInt8(0)
+    scan_angle_rank::Int8 = Int8(0)
+    user_data::UInt8 = UInt8(0)
+    point_source_ID::UInt16 = UInt16(0)
+
+
+    # Another evil type
+    # I16 extended_scan_angle;
+    # U8 extended_point_type : 2;
+    # U8 extended_scanner_channel : 2;
+    # U8 extended_classification_flags : 4;  8
+    # U8 extended_classification;
+    # U8 extended_return_number : 4;
+    # U8 extended_number_of_returns : 4;  8
+    extended_scan_angle::Int16 = Int16(0)
+    extended_point_type::UInt8 = UInt8(0)
+    # extended_scanner_channel::UInt8 = UInt8(0)
+    # extended_classification_flags::UInt8 = UInt8(0)
+    extended_classification::UInt8 = UInt8(0)
+    extended_return_number::UInt8 = UInt8(0)
+    # extended_number_of_returns::UInt8 = UInt8(0)
+    dummy::NTuple{7,UInt8} = ntuple(i -> UInt8(0), 7)
+    gps_time::Float64 = Float64(0.0)
+    rgb::NTuple{4,UInt16} = ntuple(i -> UInt16(0), 4)
+    wave_packet::NTuple{29,UInt8} = ntuple(i -> UInt8(0), 29)
+    num_extra_bytes::Int32 = Int32(0)
+    extra_bytes::Ptr{UInt8} = C_NULL
 end
 
 const classes = (created=0,
@@ -162,14 +214,14 @@ const classes_extended = (created=0,
     noise_high=18,)
 const user_defined_class_extended = 64
 
-LasIO.return_number(p::LazIO.RawPoint) = (p.return_number & 0b00000111)
-LasIO.number_of_returns(p::LazIO.RawPoint) = (p.return_number & 0b00111000) >> 3
-LasIO.scan_direction(p::LazIO.RawPoint) = Bool((p.return_number & 0b01000000) >> 6)
-LasIO.edge_of_flight_line(p::LazIO.RawPoint) = Bool((p.return_number & 0b10000000) >> 7)
+LasIO.return_number(p::LazIO.AbstractRawPoint) = (p.return_number & 0b00000111)
+LasIO.number_of_returns(p::LazIO.AbstractRawPoint) = (p.return_number & 0b00111000) >> 3
+LasIO.scan_direction(p::LazIO.AbstractRawPoint) = Bool((p.return_number & 0b01000000) >> 6)
+LasIO.edge_of_flight_line(p::LazIO.AbstractRawPoint) = Bool((p.return_number & 0b10000000) >> 7)
 
-LasIO.classification(p::LazIO.RawPoint) = (p.classification & 0b00011111)
-LasIO.synthetic(p::LazIO.RawPoint) = Bool((p.classification & 0b00100000) >> 5)
-LasIO.key_point(p::LazIO.RawPoint) = Bool((p.classification & 0b01000000) >> 6)
-LasIO.withheld(p::LazIO.RawPoint) = Bool((p.classification & 0b10000000) >> 7)
+LasIO.classification(p::LazIO.AbstractRawPoint) = (p.classification & 0b00011111)
+LasIO.synthetic(p::LazIO.AbstractRawPoint) = Bool((p.classification & 0b00100000) >> 5)
+LasIO.key_point(p::LazIO.AbstractRawPoint) = Bool((p.classification & 0b01000000) >> 6)
+LasIO.withheld(p::LazIO.AbstractRawPoint) = Bool((p.classification & 0b10000000) >> 7)
 
-Dates.DateTime(p::LazIO.RawPoint) = Dates.unix2datetime(p.gps_time) + gps_epoch
+Dates.DateTime(p::LazIO.AbstractRawPoint) = Dates.unix2datetime(p.gps_time) + gps_epoch

@@ -3,6 +3,7 @@ struct Dataset{Version}
     filehandle::Ptr{Cvoid}
     header::LazHeader  # this enables iterating without unsafe_load everytime
     point::Ptr{RawPoint}
+    am::CoordinateTransformations.AffineMap{LinearAlgebra.Diagonal{Float64,StaticArraysCore.SVector{3,Float64}},StaticArraysCore.SVector{3,Float64}}
 end
 
 function Base.show(io::IO, ds::Dataset{Version}) where {Version}
@@ -36,12 +37,15 @@ function open(f::AbstractString)
     point_ptr = Ref{Ptr{RawPoint}}()
     @check laszip_reader[] laszip_get_point_pointer(laszip_reader[], point_ptr)
 
+    # Get coordinate transformation
+    am = CoordinateTransformations.AffineMap(Diagonal(SA_F64[header.x_scale_factor 0 0; 0 header.y_scale_factor 0; 0 0 header.z_scale_factor]), SA_F64[header.x_offset, header.y_offset, header.z_offset])
+
     header.point_data_format > 3 && @warn "The LAS 1.4+ format is not fully supported yet."
-    Dataset{header.point_data_format}(f, laszip_reader[], header, point_ptr[])
+    Dataset{header.point_data_format}(f, laszip_reader[], header, point_ptr[], am)
 end
 
 function CoordinateTransformations.AffineMap(ds::Dataset)
-    CoordinateTransformations.AffineMap(Diagonal(SA_F64[ds.header.x_scale_factor 0 0; 0 ds.header.y_scale_factor 0; 0 0 ds.header.z_scale_factor]), SA_F64[ds.header.x_offset, ds.header.y_offset, ds.header.z_offset])
+    ds.am
 end
 
 """Iteration of LAZ file."""
@@ -49,7 +53,7 @@ function Base.iterate(ds::Dataset, state::Int)
     if state >= length(ds)
         return nothing
     else
-        laszip_read_point(ds.filehandle)
+        @check ds.filehandle laszip_read_point(ds.filehandle)
         return eltype(ds)(unsafe_load(ds.point), CoordinateTransformations.AffineMap(ds)), state + 1
     end
 end
@@ -59,25 +63,26 @@ function Base.iterate(ds::Dataset)
     if length(ds) == 0
         nothing
     else
-        laszip_seek_point(ds.filehandle, 0)
-        laszip_read_point(ds.filehandle)
+        @check ds.filehandle laszip_seek_point(ds.filehandle, 0)
+        @check ds.filehandle laszip_read_point(ds.filehandle)
         eltype(ds)(unsafe_load(ds.point), CoordinateTransformations.AffineMap(ds)), 1
     end
 end
 
 function Base.getindex(ds::Dataset, i::Integer)
     (1 <= i <= length(ds)) || throw(BoundsError(ds, i))
-    laszip_seek_point(ds.filehandle, i - 1)
-    laszip_read_point(ds.filehandle)
+    @check ds.filehandle laszip_seek_point(ds.filehandle, i - 1)
+    @check ds.filehandle laszip_read_point(ds.filehandle)
     eltype(ds)(unsafe_load(ds.point), CoordinateTransformations.AffineMap(ds))
 end
 
 function Base.getindex(ds::Dataset, i::UnitRange{<:Integer})
     out = Vector{eltype(ds)}(undef, length(i))
+    isempty(i) && return out
     (1 <= i[begin] <= length(ds)) && (1 <= i[end] <= length(ds)) || throw(BoundsError(ds, i))
-    laszip_seek_point(ds.filehandle, i[begin] - 1)
+    @check ds.filehandle laszip_seek_point(ds.filehandle, i[begin] - 1)
     for I in eachindex(out)
-        laszip_read_point(ds.filehandle)
+        @check ds.filehandle laszip_read_point(ds.filehandle)
         out[I] = eltype(ds)(unsafe_load(ds.point), CoordinateTransformations.AffineMap(ds))
     end
     out
@@ -87,8 +92,8 @@ function Base.getindex(ds::Dataset, i::StepRange{<:Integer,<:Integer})
     out = Vector{eltype(ds)}(undef, length(i))
     (1 <= i[begin] <= length(ds)) && (1 <= i[end] <= length(ds)) || throw(BoundsError(ds, i))
     for I in eachindex(out)
-        laszip_seek_point(ds.filehandle, i[I] - 1)
-        laszip_read_point(ds.filehandle)
+        @check ds.filehandle laszip_seek_point(ds.filehandle, i[I] - 1)
+        @check ds.filehandle laszip_read_point(ds.filehandle)
         out[I] = eltype(ds)(unsafe_load(ds.point), CoordinateTransformations.AffineMap(ds))
     end
     out
