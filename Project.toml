@@ -1,7 +1,7 @@
 name = "LazIO"
 uuid = "c3605908-9f0f-11e8-0a72-0d361c15a277"
-authors = ["Maarten Pronk <git@evetion.nl>"]
 version = "0.4.6"
+authors = ["Maarten Pronk <git@evetion.nl>"]
 
 [deps]
 CoordinateTransformations = "150eb455-5306-5404-9cee-2592286d6298"
@@ -35,7 +35,7 @@ FileIO = "1.2"
 FixedPointNumbers = "0.5, 0.6, 0.7, 0.8"
 GeoInterface = "1"
 LasIO = "0.3"
-Makie = "0.20, 0.21, 0.22"
+Makie = "0.20, 0.21, 0.22, 0.24"
 RecipesBase = "1.3.4"
 Setfield = "1.1.1"
 StaticArrays = "1"
