@@ -13,6 +13,7 @@ using LinearAlgebra
 using StaticArrays
 using UUIDs
 using Setfield
+using PrecompileTools: @setup_workload, @compile_workload
 
 # Module initialization function
 function __init__()
@@ -30,6 +31,7 @@ include("dataset.jl")
 include("write.jl")
 include("table.jl")
 include("geointerface.jl")
+include("precompile.jl")
 
 export return_number
 export number_of_returns
